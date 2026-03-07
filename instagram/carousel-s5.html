@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Carousel S5</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 12px; }
+    
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    .canvas {
+      width: 1080px;
+      height: 1080px;
+      background: #DC2626;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      flex-shrink: 0;
+    }
+
+    /* Red texture */
+    .bg-texture {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Dark center glow */
+    .bg-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(0,0,0,0.25) 0%, transparent 65%);
+    }
+
+    /* Corner accents */
+    .corner-tl {
+      position: absolute;
+      top: 48px; left: 48px;
+      width: 60px; height: 60px;
+      border-top: 4px solid rgba(255,255,255,0.3);
+      border-left: 4px solid rgba(255,255,255,0.3);
+    }
+    .corner-br {
+      position: absolute;
+      bottom: 48px; right: 48px;
+      width: 60px; height: 60px;
+      border-bottom: 4px solid rgba(255,255,255,0.3);
+      border-right: 4px solid rgba(255,255,255,0.3);
+    }
+
+    .slide-dots {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 20;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+    .dot.active { background: #fff; width: 28px; border-radius: 5px; }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 80px;
+      text-align: center;
+    }
+
+    .slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    .cta-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .wordmark {
+      font-size: 180px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -8px;
+      line-height: 0.9;
+      margin-bottom: 32px;
+      text-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    }
+
+    .url {
+      font-family: 'Inter', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: -0.5px;
+      margin-bottom: 64px;
+    }
+
+    .red-line {
+      width: 80px;
+      height: 4px;
+      background: rgba(255,255,255,0.4);
+      margin-bottom: 64px;
+    }
+
+    .download-btn {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      padding: 24px 64px;
+      border-radius: 100px;
+      letter-spacing: -0.5px;
+    }
+
+    .tagline {
+      font-size: 22px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      margin-top: 32px;
+      letter-spacing: -0.3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1080px · Carrusel 5/5</span><button id="dl-btn" data-filename="RIVAL-carousel-s5.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+  <div class="canvas">
+    <div class="bg-texture"></div>
+    <div class="bg-glow"></div>
+    <div class="corner-tl"></div>
+    <div class="corner-br"></div>
+
+    <div class="content">
+      <div class="slide-num">05 / 05</div>
+      <div class="cta-label">Únete gratis</div>
+      <div class="wordmark">RIVAL</div>
+      <div class="url">rivalfit.app</div>
+      <div class="red-line"></div>
+      <div class="download-btn">Empieza Gratis →</div>
+      <div class="tagline">850K+ atletas ya están adentro.</div>
+    </div>
+
+    <div class="slide-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot active"></div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '⬇  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '⬇  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

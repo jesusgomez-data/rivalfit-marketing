@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Mockup Feed</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 12px; }
+    
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    /* === CANVAS === */
+    .canvas {
+      width: 1080px;
+      height: 1350px;
+      background: #080808;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Background glow */
+    .bg-glow-red {
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(220,38,38,0.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .bg-glow-bottom {
+      position: absolute;
+      bottom: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(220,38,38,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Canvas label */
+    .canvas-label {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .canvas-label-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+
+    .canvas-label-text span {
+      color: rgba(220,38,38,0.6);
+    }
+
+    /* Bottom URL */
+    .canvas-url {
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .canvas-url-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 2px;
+    }
+
+    .canvas-url-text span { color: rgba(220,38,38,0.6); }
+
+    /* === PHONE FRAME === */
+    .phone {
+      width: 420px;
+      height: 860px;
+      background: #1c1c1e;
+      border-radius: 52px;
+      border: 3px solid #3a3a3c;
+      box-shadow:
+        0 0 0 1px #111,
+        0 40px 80px rgba(0,0,0,0.8),
+        0 0 60px rgba(220,38,38,0.12),
+        inset 0 0 0 1px #2a2a2a;
+      position: relative;
+      overflow: hidden;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    /* Notch */
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #1c1c1e;
+      border-radius: 0 0 22px 22px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .notch-cam {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #2a2a2a;
+      border: 1.5px solid #333;
+    }
+
+    .notch-pill {
+      width: 48px;
+      height: 8px;
+      background: #2a2a2a;
+      border-radius: 4px;
+    }
+
+    /* Screen */
+    .screen {
+      position: absolute;
+      inset: 5px;
+      border-radius: 47px;
+      overflow: hidden;
+      background: #0f0f0f;
+    }
+
+    /* === APP UI === */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 48px;
+      padding: 14px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .status-time {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .status-icon {
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* App header */
+    .app-header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #DC2626, #991b1b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .header-logo {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .header-logo span { color: #DC2626; }
+
+    .header-bell {
+      position: relative;
+      font-size: 20px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .bell-dot {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #DC2626;
+      border: 1.5px solid #0f0f0f;
+    }
+
+    /* Feed */
+    .feed {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Post card */
+    .post {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .post-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .post-avatar-c { background: linear-gradient(135deg, #DC2626, #7f1d1d); }
+    .post-avatar-s { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+
+    .post-meta { flex: 1; }
+
+    .post-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .post-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.5px;
+    }
+
+    .post-time {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* WOD content box */
+    .wod-box {
+      background: #181818;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .wod-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+
+    .wod-details {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .wod-result {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-time {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .pr-badge {
+      background: #DC2626;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 7px;
+      border-radius: 6px;
+    }
+
+    .result-weight {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .result-increase {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #22c55e;
+    }
+
+    /* Post actions */
+    .post-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .action-icon {
+      font-size: 16px;
+    }
+
+    /* Caption text */
+    .post-caption {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    /* Leaderboard mini widget */
+    .mini-leaderboard {
+      margin: 0 20px 0;
+      padding: 14px 16px;
+      background: #181818;
+      border: 1px solid rgba(220,38,38,0.2);
+      border-radius: 12px;
+    }
+
+    .mini-lb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .mini-lb-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: rgba(220,38,38,0.8);
+      text-transform: uppercase;
+    }
+
+    .mini-lb-see-all {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .mini-lb-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .mini-lb-row:last-child { border-bottom: none; }
+
+    .lb-rank {
+      font-size: 12px;
+      font-weight: 800;
+      width: 18px;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+    }
+
+    .lb-rank-1 { color: #fbbf24; }
+    .lb-rank-2 { color: #9ca3af; }
+    .lb-rank-3 { color: #b45309; }
+
+    .lb-avatar-sm {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .lb-av1 { background: linear-gradient(135deg, #DC2626, #7f1d1d); }
+    .lb-av2 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+    .lb-av3 { background: linear-gradient(135deg, #0891b2, #164e63); }
+
+    .lb-name {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .lb-time {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      height: 68px;
+      background: #141414;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px;
+      padding-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .nav-icon.active {
+      color: #DC2626;
+    }
+
+    .nav-add {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #DC2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #fff;
+      font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1350px · App Feed Mockup</span><button id="dl-btn" data-filename="RIVAL-mockup-feed.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+
+  <div class="canvas">
+    <div class="bg-glow-red"></div>
+    <div class="bg-glow-bottom"></div>
+
+    <div class="canvas-label">
+      <div class="canvas-label-text"><span>RIVAL</span> · Social Fitness Feed</div>
+    </div>
+
+    <!-- PHONE -->
+    <div class="phone">
+      <div class="phone-notch">
+        <div class="notch-pill"></div>
+        <div class="notch-cam"></div>
+      </div>
+
+      <div class="screen">
+        <div class="app">
+          <!-- Status bar -->
+          <div class="status-bar">
+            <div class="status-time">9:41</div>
+            <div class="status-icons">
+              <div class="status-icon">▲▲▲</div>
+              <div class="status-icon">WiFi</div>
+              <div class="status-icon">▓▓▓</div>
+            </div>
+          </div>
+
+          <!-- App header -->
+          <div class="app-header">
+            <div class="header-avatar">JM</div>
+            <div class="header-logo">RIVAL<span>.</span></div>
+            <div class="header-bell">
+              🔔
+              <div class="bell-dot"></div>
+            </div>
+          </div>
+
+          <!-- Feed -->
+          <div class="feed">
+            <!-- Post 1 -->
+            <div class="post">
+              <div class="post-header">
+                <div class="post-avatar post-avatar-c">C</div>
+                <div class="post-meta">
+                  <div class="post-name">Carlos M.</div>
+                  <div class="post-sub">Madrid, España · #3 Global</div>
+                </div>
+                <div class="post-time">2h</div>
+              </div>
+              <div class="post-caption">Fran día de hoy. Semana de volume alta pero los resultados hablan 💪</div>
+              <div class="wod-box">
+                <div class="wod-title">FRAN</div>
+                <div class="wod-details">21-15-9 · Thrusters 43kg + Kipping Pull-ups · For Time</div>
+                <div class="wod-result">
+                  <div class="result-time">3:42</div>
+                  <div class="pr-badge">PR</div>
+                </div>
+              </div>
+              <div class="post-actions">
+                <div class="action-btn">
+                  <span class="action-icon">❤️</span> 124
+                </div>
+                <div class="action-btn">
+                  <span class="action-icon">💬</span> 18
+                </div>
+                <div class="action-btn">
+                  <span class="action-icon">⚔️</span> Retar
+                </div>
+              </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="post">
+              <div class="post-header">
+                <div class="post-avatar post-avatar-s">S</div>
+                <div class="post-meta">
+                  <div class="post-name">Sara K.</div>
+                  <div class="post-sub">Barcelona, España · #7 Global</div>
+                </div>
+                <div class="post-time">4h</div>
+              </div>
+              <div class="post-caption">Deadlift day. Sin cinturón. Los números no mienten 🔥</div>
+              <div class="wod-box">
+                <div class="wod-title">Deadlift</div>
+                <div class="wod-details">Strength · 5 sets × 3 reps · 90% 1RM</div>
+                <div class="wod-result">
+                  <div class="result-weight">145kg</div>
+                  <div class="pr-badge">PR</div>
+                  <div class="result-increase">+10kg</div>
+                </div>
+              </div>
+              <div class="post-actions">
+                <div class="action-btn">
+                  <span class="action-icon">❤️</span> 89
+                </div>
+                <div class="action-btn">
+                  <span class="action-icon">💬</span> 12
+                </div>
+                <div class="action-btn">
+                  <span class="action-icon">⚔️</span> Retar
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini leaderboard widget -->
+            <div class="mini-leaderboard">
+              <div class="mini-lb-header">
+                <div class="mini-lb-title">Top Fran · España</div>
+                <div class="mini-lb-see-all">Ver todo →</div>
+              </div>
+              <div class="mini-lb-row">
+                <div class="lb-rank lb-rank-1">1</div>
+                <div class="lb-avatar-sm lb-av1">C</div>
+                <div class="lb-name">Carlos M.</div>
+                <div class="lb-time">3:42</div>
+              </div>
+              <div class="mini-lb-row">
+                <div class="lb-rank lb-rank-2">2</div>
+                <div class="lb-avatar-sm lb-av2">S</div>
+                <div class="lb-name">Sara K.</div>
+                <div class="lb-time">3:58</div>
+              </div>
+              <div class="mini-lb-row">
+                <div class="lb-rank lb-rank-3">3</div>
+                <div class="lb-avatar-sm lb-av3">M</div>
+                <div class="lb-name">Marc P.</div>
+                <div class="lb-time">4:12</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom nav -->
+          <div class="bottom-nav">
+            <div class="nav-item">
+              <div class="nav-icon active">🏠</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-icon">🔍</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-add">+</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-icon">🏆</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-icon">👤</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas-url">
+      <div class="canvas-url-text"><span>rivalfit.app</span></div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '⬇  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '⬇  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

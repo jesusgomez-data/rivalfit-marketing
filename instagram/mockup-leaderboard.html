@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Mockup Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 12px; }
+    
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    /* === CANVAS === */
+    .canvas {
+      width: 1080px;
+      height: 1350px;
+      background: #080808;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .bg-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-60%, -50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(220,38,38,0.15) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .canvas-label {
+      position: absolute;
+      top: 60px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .canvas-label-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+
+    .canvas-label-text span { color: rgba(220,38,38,0.6); }
+
+    .canvas-url {
+      position: absolute;
+      bottom: 60px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .canvas-url-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 2px;
+    }
+
+    .canvas-url-text span { color: rgba(220,38,38,0.6); }
+
+    /* === PHONE FRAME === */
+    .phone {
+      width: 420px;
+      height: 860px;
+      background: #1c1c1e;
+      border-radius: 52px;
+      border: 3px solid #3a3a3c;
+      box-shadow:
+        0 0 0 1px #111,
+        0 40px 80px rgba(0,0,0,0.8),
+        0 0 60px rgba(220,38,38,0.12),
+        inset 0 0 0 1px #2a2a2a;
+      position: relative;
+      overflow: hidden;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #1c1c1e;
+      border-radius: 0 0 22px 22px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .notch-cam { width: 12px; height: 12px; border-radius: 50%; background: #2a2a2a; border: 1.5px solid #333; }
+    .notch-pill { width: 48px; height: 8px; background: #2a2a2a; border-radius: 4px; }
+
+    .screen {
+      position: absolute;
+      inset: 5px;
+      border-radius: 47px;
+      overflow: hidden;
+      background: #0f0f0f;
+    }
+
+    /* === APP UI === */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 48px;
+      padding: 14px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .status-time { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #fff; }
+    .status-icons { display: flex; gap: 6px; }
+    .status-icon { font-size: 11px; color: rgba(255,255,255,0.8); }
+
+    /* App header */
+    .app-header {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+
+    .header-back {
+      position: absolute;
+      left: 20px;
+      font-size: 18px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Tab bar */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .tab {
+      flex: 1;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .tab.active {
+      color: #DC2626;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      right: 16px;
+      height: 2px;
+      background: #DC2626;
+      border-radius: 1px;
+    }
+
+    /* WOD selector */
+    .wod-selector {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+
+    .wod-selector-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .wod-selector-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #DC2626;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Top 3 podium */
+    .podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 20px 8px;
+      background: linear-gradient(to bottom, rgba(220,38,38,0.06), transparent);
+      flex-shrink: 0;
+    }
+
+    .podium-place {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .podium-avatar {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+      position: relative;
+    }
+
+    .p1-av { width: 52px; height: 52px; font-size: 18px; background: linear-gradient(135deg, #DC2626, #7f1d1d); border: 2px solid #fbbf24; }
+    .p2-av { width: 44px; height: 44px; font-size: 15px; background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+    .p3-av { width: 44px; height: 44px; font-size: 15px; background: linear-gradient(135deg, #0891b2, #164e63); }
+
+    .podium-crown {
+      position: absolute;
+      top: -14px;
+      font-size: 14px;
+    }
+
+    .podium-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      max-width: 70px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .podium-time {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .podium-bar {
+      border-radius: 6px 6px 0 0;
+      width: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bar-1 { height: 48px; background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.3); }
+    .bar-2 { height: 36px; background: rgba(156,163,175,0.1); border: 1px solid rgba(156,163,175,0.2); }
+    .bar-3 { height: 28px; background: rgba(180,83,9,0.1); border: 1px solid rgba(180,83,9,0.2); }
+
+    .bar-num {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .bar-num-1 { color: rgba(251,191,36,0.7); }
+    .bar-num-2 { color: rgba(156,163,175,0.5); }
+    .bar-num-3 { color: rgba(180,83,9,0.5); }
+
+    /* Rank list */
+    .rank-list {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 0 16px;
+    }
+
+    .rank-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .rank-row.me {
+      background: rgba(220,38,38,0.08);
+      margin: 0 -16px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border-bottom: none;
+    }
+
+    .rank-num {
+      width: 22px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.35);
+      flex-shrink: 0;
+    }
+
+    .rank-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .av-a { background: linear-gradient(135deg, #DC2626, #7f1d1d); }
+    .av-b { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+    .av-c { background: linear-gradient(135deg, #0891b2, #164e63); }
+    .av-d { background: linear-gradient(135deg, #16a34a, #14532d); }
+    .av-me { background: linear-gradient(135deg, #DC2626, #991b1b); border: 2px solid #DC2626; }
+
+    .rank-info { flex: 1; }
+
+    .rank-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .rank-name.me-name { color: #fff; }
+
+    .rank-city {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .rank-score {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .rank-delta {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      width: 22px;
+      text-align: right;
+    }
+
+    .delta-up { color: #22c55e; }
+    .delta-dn { color: #ef4444; }
+    .delta-eq { color: rgba(255,255,255,0.25); }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      height: 68px;
+      background: #141414;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px 10px;
+      flex-shrink: 0;
+    }
+
+    .nav-icon { font-size: 20px; color: rgba(255,255,255,0.35); }
+    .nav-icon.active { color: #DC2626; }
+    .nav-add {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: #DC2626;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: #fff; font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1350px · Leaderboard Mockup</span><button id="dl-btn" data-filename="RIVAL-mockup-leaderboard.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+
+  <div class="canvas">
+    <div class="bg-glow"></div>
+
+    <div class="canvas-label">
+      <div class="canvas-label-text"><span>RIVAL</span> · Global Leaderboard</div>
+    </div>
+
+    <!-- PHONE -->
+    <div class="phone">
+      <div class="phone-notch">
+        <div class="notch-pill"></div>
+        <div class="notch-cam"></div>
+      </div>
+
+      <div class="screen">
+        <div class="app">
+          <!-- Status bar -->
+          <div class="status-bar">
+            <div class="status-time">9:41</div>
+            <div class="status-icons">
+              <div class="status-icon">▲▲▲ WiFi ▓▓▓</div>
+            </div>
+          </div>
+
+          <!-- App header -->
+          <div class="app-header">
+            <div class="header-back">←</div>
+            <div class="header-title">Rankings</div>
+          </div>
+
+          <!-- Tab bar -->
+          <div class="tab-bar">
+            <div class="tab">Global</div>
+            <div class="tab active">España</div>
+            <div class="tab">Amigos</div>
+          </div>
+
+          <!-- WOD selector -->
+          <div class="wod-selector">
+            <div class="wod-selector-label">WOD</div>
+            <div class="wod-selector-name">FRAN ▼</div>
+          </div>
+
+          <!-- Podium top 3 -->
+          <div class="podium">
+            <!-- 2nd -->
+            <div class="podium-place">
+              <div class="podium-avatar p2-av">S</div>
+              <div class="podium-name">Sara K.</div>
+              <div class="podium-time">3:58</div>
+              <div class="podium-bar bar-2">
+                <div class="bar-num bar-num-2">2</div>
+              </div>
+            </div>
+            <!-- 1st -->
+            <div class="podium-place">
+              <div class="podium-avatar p1-av">
+                C
+                <div class="podium-crown">👑</div>
+              </div>
+              <div class="podium-name">Carlos M.</div>
+              <div class="podium-time">3:42</div>
+              <div class="podium-bar bar-1">
+                <div class="bar-num bar-num-1">1</div>
+              </div>
+            </div>
+            <!-- 3rd -->
+            <div class="podium-place">
+              <div class="podium-avatar p3-av">M</div>
+              <div class="podium-name">Marc P.</div>
+              <div class="podium-time">4:12</div>
+              <div class="podium-bar bar-3">
+                <div class="bar-num bar-num-3">3</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rank list -->
+          <div class="rank-list">
+            <div class="rank-row">
+              <div class="rank-num">4</div>
+              <div class="rank-avatar av-d">L</div>
+              <div class="rank-info">
+                <div class="rank-name">Laura G.</div>
+                <div class="rank-city">Sevilla</div>
+              </div>
+              <div class="rank-score">4:28</div>
+              <div class="rank-delta delta-up">▲2</div>
+            </div>
+
+            <div class="rank-row">
+              <div class="rank-num">5</div>
+              <div class="rank-avatar av-b">R</div>
+              <div class="rank-info">
+                <div class="rank-name">Rafa D.</div>
+                <div class="rank-city">Valencia</div>
+              </div>
+              <div class="rank-score">4:35</div>
+              <div class="rank-delta delta-dn">▼1</div>
+            </div>
+
+            <div class="rank-row">
+              <div class="rank-num">6</div>
+              <div class="rank-avatar av-c">A</div>
+              <div class="rank-info">
+                <div class="rank-name">Ana M.</div>
+                <div class="rank-city">Bilbao</div>
+              </div>
+              <div class="rank-score">4:41</div>
+              <div class="rank-delta delta-eq">—</div>
+            </div>
+
+            <!-- Separator "Tu posición" -->
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 0;flex-shrink:0">
+              <div style="flex:1;height:1px;background:rgba(220,38,38,0.2)"></div>
+              <div style="font-family:'Inter',sans-serif;font-size:10px;color:rgba(220,38,38,0.5);letter-spacing:2px;text-transform:uppercase;white-space:nowrap">Tu posición</div>
+              <div style="flex:1;height:1px;background:rgba(220,38,38,0.2)"></div>
+            </div>
+
+            <!-- Me -->
+            <div class="rank-row me">
+              <div class="rank-num" style="color:#DC2626">14</div>
+              <div class="rank-avatar av-me">Tú</div>
+              <div class="rank-info">
+                <div class="rank-name me-name">Tú · Jesus M.</div>
+                <div class="rank-city">Madrid</div>
+              </div>
+              <div class="rank-score">5:12</div>
+              <div class="rank-delta delta-up">▲3</div>
+            </div>
+          </div>
+
+          <!-- Bottom nav -->
+          <div class="bottom-nav">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-icon">🔍</div>
+            <div class="nav-add">+</div>
+            <div class="nav-icon active">🏆</div>
+            <div class="nav-icon">👤</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas-url">
+      <div class="canvas-url-text"><span>rivalfit.app</span></div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '⬇  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '⬇  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

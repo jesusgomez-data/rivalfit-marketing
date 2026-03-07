@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Carousel S3</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 12px; }
+    
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    .canvas {
+      width: 1080px;
+      height: 1080px;
+      background: #0a0a0a;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      flex-shrink: 0;
+    }
+
+    .bg-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(220,38,38,0.18) 0%, transparent 60%);
+    }
+
+    .bar-top { position: absolute; top: 0; left: 0; right: 0; height: 5px; background: #DC2626; }
+    .bar-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: #DC2626; }
+
+    .slide-dots {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 20;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+    .dot.active { background: #DC2626; width: 28px; border-radius: 5px; }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 80px;
+      text-align: center;
+      gap: 0;
+    }
+
+    .slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      color: rgba(220,38,38,0.6);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    .answer-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .wordmark {
+      font-size: 200px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -10px;
+      line-height: 0.9;
+      margin-bottom: 32px;
+      text-shadow: 0 0 100px rgba(220,38,38,0.3);
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .check-badge {
+      background: #DC2626;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .check-text {
+      font-size: 30px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: -0.5px;
+    }
+
+    .red-line {
+      width: 80px;
+      height: 4px;
+      background: #DC2626;
+      margin-bottom: 48px;
+    }
+
+    .tagline {
+      font-size: 28px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: -0.3px;
+    }
+
+    .tagline strong {
+      color: rgba(255,255,255,0.7);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1080px · Carrusel 3/5</span><button id="dl-btn" data-filename="RIVAL-carousel-s3.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+  <div class="canvas">
+    <div class="bg-glow"></div>
+    <div class="bar-top"></div>
+    <div class="bar-bottom"></div>
+
+    <div class="content">
+      <div class="slide-num">03 / 05</div>
+      <div class="answer-label">La respuesta</div>
+      <div class="wordmark">RIVAL</div>
+
+      <div class="check-row">
+        <div class="check-badge">✓</div>
+        <div class="check-text">Todo en un solo lugar.</div>
+      </div>
+
+      <div class="red-line"></div>
+
+      <div class="tagline">
+        WODs · Rankings · Duelos<br>
+        <strong>Box · Analytics · IA Coaching</strong>
+      </div>
+    </div>
+
+    <div class="slide-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '⬇  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '⬇  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

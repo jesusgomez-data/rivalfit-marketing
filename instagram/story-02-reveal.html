@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Story 02 Reveal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 12px; }
+
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    .canvas {
+      width: 1080px;
+      height: 1920px;
+      background: #0a0a0a;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      flex-shrink: 0;
+    }
+
+    .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: #DC2626; }
+    .bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #DC2626; }
+
+    /* Big red diagonal accent */
+    .diagonal-accent {
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 800px;
+      height: 800px;
+      background: #DC2626;
+      transform: rotate(35deg);
+      opacity: 0.06;
+    }
+
+    /* Red glow center-left */
+    .bg-glow {
+      position: absolute;
+      top: 50%;
+      left: -100px;
+      transform: translateY(-50%);
+      width: 700px;
+      height: 1000px;
+      background: radial-gradient(ellipse, rgba(220,38,38,0.15) 0%, transparent 65%);
+    }
+
+    .brand-row {
+      position: absolute;
+      top: 60px;
+      left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      z-index: 10;
+    }
+    .brand-logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+    .brand-dot { width: 6px; height: 6px; border-radius: 50%; background: #DC2626; }
+    .brand-handle {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 180px 80px 120px;
+      z-index: 10;
+    }
+
+    .reveal-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      color: #DC2626;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .headline {
+      font-size: 88px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -4px;
+      line-height: 0.92;
+      margin-bottom: 48px;
+    }
+
+    .headline .red { color: #DC2626; }
+
+    .sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 72px;
+    }
+
+    /* Feature list */
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 1;
+    }
+
+    .feature-row {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 36px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .feature-row:first-child {
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .feature-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(220,38,38,0.5);
+      letter-spacing: 2px;
+      width: 36px;
+      flex-shrink: 0;
+    }
+
+    .feature-icon {
+      font-size: 44px;
+      flex-shrink: 0;
+      width: 60px;
+      text-align: center;
+    }
+
+    .feature-info {
+      flex: 1;
+    }
+
+    .feature-name {
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.8px;
+      margin-bottom: 6px;
+    }
+
+    .feature-detail {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .feature-badge {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #DC2626;
+      background: rgba(220,38,38,0.1);
+      border: 1px solid rgba(220,38,38,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      white-space: nowrap;
+    }
+
+    .feature-badge.free {
+      color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1920px · Story 2/3</span><button id="dl-btn" data-filename="RIVAL-story-02-reveal.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+  <div class="canvas">
+    <div class="top-bar"></div>
+    <div class="bottom-bar"></div>
+    <div class="diagonal-accent"></div>
+    <div class="bg-glow"></div>
+
+    <div class="brand-row">
+      <div class="brand-logo">RIVAL</div>
+      <div class="brand-dot"></div>
+      <div class="brand-handle">@rivalfit.app</div>
+    </div>
+
+    <div class="content">
+      <div class="reveal-label">Todo en una sola app</div>
+      <div class="headline">Una app.<br><span class="red">Cero</span><br>excusas.</div>
+      <div class="sub">RIVAL reune todo lo que necesita un atleta serio en un solo lugar.</div>
+
+      <div class="feature-list">
+        <div class="feature-row">
+          <div class="feature-num">01</div>
+          <div class="feature-icon">🏆</div>
+          <div class="feature-info">
+            <div class="feature-name">Rankings</div>
+            <div class="feature-detail">Compite con atletas globales</div>
+          </div>
+          <div class="feature-badge free">Gratis</div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-num">02</div>
+          <div class="feature-icon">⚔️</div>
+          <div class="feature-info">
+            <div class="feature-name">Duelos 1v1</div>
+            <div class="feature-detail">Reta a cualquier atleta</div>
+          </div>
+          <div class="feature-badge free">Gratis</div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-num">03</div>
+          <div class="feature-icon">📊</div>
+          <div class="feature-info">
+            <div class="feature-name">Analytics</div>
+            <div class="feature-detail">1RM · Volumen · Progresión</div>
+          </div>
+          <div class="feature-badge free">Gratis</div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-num">04</div>
+          <div class="feature-icon">🤖</div>
+          <div class="feature-info">
+            <div class="feature-name">IA Coaching</div>
+            <div class="feature-detail">Programación inteligente</div>
+          </div>
+          <div class="feature-badge">Pro</div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-num">05</div>
+          <div class="feature-icon">🏟️</div>
+          <div class="feature-info">
+            <div class="feature-name">Tu Box</div>
+            <div class="feature-detail">WODs · Clases · Comunidad</div>
+          </div>
+          <div class="feature-badge free">Gratis</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '&#11015;&#xFE0E;  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '&#11015;&#xFE0E;  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

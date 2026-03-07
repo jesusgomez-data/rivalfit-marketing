@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Post 04 Duelos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 12px;
+    }
+
+    
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    .canvas {
+      width: 1080px;
+      height: 1350px;
+      background: #0a0a0a;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      flex-shrink: 0;
+    }
+
+    /* Background: diagonal split subtle red */
+    .bg-split {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(220,38,38,0.05) 0%, transparent 50%, rgba(220,38,38,0.03) 100%);
+    }
+
+    .bg-glow-left {
+      position: absolute;
+      top: 50%;
+      left: -100px;
+      transform: translateY(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(220,38,38,0.15) 0%, transparent 65%);
+    }
+
+    .bg-glow-right {
+      position: absolute;
+      top: 50%;
+      right: -100px;
+      transform: translateY(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(180,180,180,0.06) 0%, transparent 65%);
+    }
+
+    /* Center vertical divider */
+    .center-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent 5%, rgba(220,38,38,0.3) 30%, rgba(220,38,38,0.3) 70%, transparent 95%);
+      transform: translateX(-50%);
+    }
+
+    /* Bars */
+    .bar-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(to right, transparent 10%, #DC2626 40%, #DC2626 60%, transparent 90%);
+    }
+
+    .bar-bottom {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 5px;
+      background: #DC2626;
+    }
+
+    /* Header */
+    .header {
+      position: absolute;
+      top: 72px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .header-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 10px;
+      color: #DC2626;
+      text-transform: uppercase;
+    }
+
+    /* Main area */
+    .main {
+      position: absolute;
+      top: 180px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Athletes row */
+    .athletes-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 0 60px;
+      gap: 0;
+      margin-bottom: 60px;
+    }
+
+    .athlete {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    /* Avatar circle */
+    .avatar {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.1);
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.15);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-left {
+      border-color: rgba(220,38,38,0.5);
+      background: radial-gradient(circle at 40% 40%, rgba(220,38,38,0.2), #1a1a1a);
+    }
+
+    .avatar-right {
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .avatar-initial {
+      font-size: 96px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.12);
+    }
+
+    .avatar-rank {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: #DC2626;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      letter-spacing: 1px;
+    }
+
+    .athlete-name {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .athlete-city {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* VS badge */
+    .vs-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 40px;
+      flex-shrink: 0;
+      margin-top: -30px;
+    }
+
+    .vs {
+      font-size: 110px;
+      font-weight: 900;
+      color: #DC2626;
+      letter-spacing: -4px;
+      line-height: 1;
+      text-shadow: 0 0 60px rgba(220,38,38,0.5);
+    }
+
+    /* WOD card */
+    .wod-card {
+      background: #141414;
+      border: 1px solid rgba(220,38,38,0.2);
+      border-radius: 20px;
+      padding: 40px 56px;
+      width: 860px;
+      margin-bottom: 56px;
+    }
+
+    .wod-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      color: #DC2626;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .wod-name {
+      font-size: 52px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .wod-details {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 1px;
+    }
+
+    /* Headline */
+    .headline {
+      font-size: 56px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -2px;
+      text-align: center;
+      line-height: 1.1;
+      margin-bottom: 40px;
+    }
+
+    .headline .red { color: #DC2626; }
+    .headline .muted { color: rgba(255,255,255,0.4); }
+
+    /* Stats row */
+    .stats-row {
+      display: flex;
+      gap: 0;
+      margin-bottom: 60px;
+    }
+
+    .stat {
+      padding: 0 48px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      display: block;
+      font-size: 44px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* CTA */
+    .cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 2px;
+    }
+
+    .cta span { color: #DC2626; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1350px · Instagram Feed</span><button id="dl-btn" data-filename="RIVAL-post-04-duels.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+
+  <div class="canvas">
+    <div class="bg-split"></div>
+    <div class="bg-glow-left"></div>
+    <div class="bg-glow-right"></div>
+    <div class="center-line"></div>
+    <div class="bar-top"></div>
+    <div class="bar-bottom"></div>
+
+    <div class="header">
+      <div class="header-label">Duelos · 1v1</div>
+    </div>
+
+    <div class="main">
+      <div class="athletes-row">
+        <div class="athlete">
+          <div class="avatar avatar-left">
+            <span class="avatar-initial">C</span>
+            <div class="avatar-rank">#1</div>
+          </div>
+          <div class="athlete-name">Carlos M.</div>
+          <div class="athlete-city">Madrid</div>
+        </div>
+
+        <div class="vs-wrap">
+          <div class="vs">VS</div>
+        </div>
+
+        <div class="athlete">
+          <div class="avatar avatar-right">
+            <span class="avatar-initial">S</span>
+          </div>
+          <div class="athlete-name">Sara K.</div>
+          <div class="athlete-city">Barcelona</div>
+        </div>
+      </div>
+
+      <div class="wod-card">
+        <div class="wod-label">WOD del Duelo</div>
+        <div class="wod-name">FRAN</div>
+        <div class="wod-details">21-15-9 · Thrusters 43kg + Kipping Pull-ups · For Time</div>
+      </div>
+
+      <div class="headline">
+        <span class="red">7 días</span> · Mismo WOD<br>
+        <span class="muted">Uno gana.</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-num">15K+</span>
+          <span class="stat-label">Duelos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">7</span>
+          <span class="stat-label">Días</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">180</span>
+          <span class="stat-label">Países</span>
+        </div>
+      </div>
+
+      <div class="cta">Lanza tu duelo en <span>rivalfit.app</span></div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '⬇  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '⬇  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Story 01 Hook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 12px; }
+
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    .canvas {
+      width: 1080px;
+      height: 1920px;
+      background: #080808;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      flex-shrink: 0;
+    }
+
+    /* Noise texture overlay */
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    /* Red glow bottom */
+    .bg-glow-bottom {
+      position: absolute;
+      bottom: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1200px;
+      height: 900px;
+      background: radial-gradient(ellipse, rgba(220,38,38,0.22) 0%, transparent 65%);
+    }
+
+    /* Red glow top */
+    .bg-glow-top {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(220,38,38,0.1) 0%, transparent 65%);
+    }
+
+    /* Top bar – brand */
+    .top-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: #DC2626;
+    }
+
+    .brand-row {
+      position: absolute;
+      top: 60px;
+      left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      z-index: 10;
+    }
+    .brand-logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+    .brand-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #DC2626;
+    }
+    .brand-handle {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.5px;
+    }
+
+    /* Main content */
+    .content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px;
+      z-index: 10;
+      gap: 0;
+    }
+
+    .question-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 8px;
+      color: #DC2626;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+
+    .question-big {
+      font-size: 96px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -4px;
+      line-height: 0.95;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .question-big span {
+      color: #DC2626;
+    }
+
+    .question-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 30px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      line-height: 1.4;
+      letter-spacing: -0.3px;
+      margin-bottom: 80px;
+    }
+
+    /* App icons row */
+    .apps-row {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .app-pill {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 14px 28px;
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: -0.3px;
+    }
+
+    .plus-sign {
+      font-size: 28px;
+      color: rgba(255,255,255,0.2);
+      font-weight: 300;
+    }
+
+    .apps-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      color: rgba(255,255,255,0.25);
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    /* Divider */
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: #DC2626;
+      margin-bottom: 80px;
+    }
+
+    /* Answer teaser */
+    .answer-teaser {
+      font-size: 44px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: -1px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .answer-teaser span {
+      color: #DC2626;
+    }
+
+    .swipe-hint {
+      position: absolute;
+      bottom: 80px;
+      left: 0; right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .swipe-arrow {
+      font-size: 28px;
+      color: rgba(255,255,255,0.3);
+      animation: bounce 2s infinite;
+    }
+
+    .swipe-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1920px · Story 1/3</span><button id="dl-btn" data-filename="RIVAL-story-01-hook.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+  <div class="canvas">
+    <div class="top-bar"></div>
+    <div class="bg-noise"></div>
+    <div class="bg-glow-top"></div>
+    <div class="bg-glow-bottom"></div>
+
+    <div class="brand-row">
+      <div class="brand-logo">RIVAL</div>
+      <div class="brand-dot"></div>
+      <div class="brand-handle">@rivalfit.app</div>
+    </div>
+
+    <div class="content">
+      <div class="question-label">La pregunta del dia</div>
+
+      <div class="question-big">
+        ¿Cuantas<br>apps usas<br>para<br><span>entrenar?</span>
+      </div>
+
+      <div class="question-sub">
+        WODs · Rankings · Nutrición<br>Duelos · Analytics · Comunidad
+      </div>
+
+      <div class="apps-row">
+        <div class="app-pill">Timer</div>
+        <div class="plus-sign">+</div>
+        <div class="app-pill">Notas</div>
+        <div class="plus-sign">+</div>
+        <div class="app-pill">Excel</div>
+      </div>
+
+      <div class="apps-label">la mayoría usa 4 apps distintas</div>
+
+      <div class="divider"></div>
+
+      <div class="answer-teaser">
+        Existe una<br>solución <span>mejor.</span>
+      </div>
+    </div>
+
+    <div class="swipe-hint">
+      <div class="swipe-arrow">&#8963;</div>
+      <div class="swipe-text">Desliza arriba</div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '&#11015;&#xFE0E;  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '&#11015;&#xFE0E;  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

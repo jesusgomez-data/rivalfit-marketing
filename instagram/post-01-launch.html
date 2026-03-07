@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RIVAL – Post 01 Launch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 12px;
+    }
+
+    
+    .dl-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #1e1e1e;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      width: fit-content;
+    }
+    .dl-info { font-family: monospace; font-size: 12px; color: #888; }
+    #dl-btn {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    #dl-btn:hover { background: #b91c1c; transform: translateY(-1px); }
+    #dl-btn:disabled { background: #555; cursor: wait; transform: none; }
+
+    .canvas {
+      width: 1080px;
+      height: 1350px;
+      background: #0a0a0a;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      flex-shrink: 0;
+    }
+
+    /* Background grid */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(220, 38, 38, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(220, 38, 38, 0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    /* Red glow center-top */
+    .bg-glow {
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 900px;
+      background: radial-gradient(ellipse, rgba(220, 38, 38, 0.14) 0%, rgba(220, 38, 38, 0.04) 45%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Bars */
+    .bar-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: #DC2626;
+    }
+
+    .bar-bottom {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(to right, transparent 5%, #DC2626 30%, #DC2626 70%, transparent 95%);
+    }
+
+    .bar-left {
+      position: absolute;
+      left: 0; top: 6px; bottom: 4px;
+      width: 4px;
+      background: linear-gradient(to bottom, transparent 10%, rgba(220,38,38,0.4) 40%, rgba(220,38,38,0.4) 60%, transparent 90%);
+    }
+
+    /* Year label top-right */
+    .year-label {
+      position: absolute;
+      top: 56px;
+      right: 80px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 5px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+
+    /* Corner accent bottom-right */
+    .corner-accent {
+      position: absolute;
+      bottom: 80px;
+      right: 80px;
+      width: 60px;
+      height: 60px;
+      border-right: 3px solid rgba(220,38,38,0.4);
+      border-bottom: 3px solid rgba(220,38,38,0.4);
+    }
+
+    /* Main content */
+    .content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      height: 100%;
+      padding: 0 100px;
+    }
+
+    .eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 7px;
+      color: #DC2626;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .wordmark {
+      font-size: 300px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -18px;
+      line-height: 0.82;
+      margin-bottom: 52px;
+      text-shadow: 0 0 120px rgba(220,38,38,0.15);
+    }
+
+    .red-line {
+      width: 100px;
+      height: 5px;
+      background: #DC2626;
+      margin-bottom: 52px;
+    }
+
+    .tagline {
+      font-size: 44px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+      margin-bottom: 100px;
+      max-width: 720px;
+    }
+
+    .tagline strong {
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .tagline .red {
+      color: #DC2626;
+      font-weight: 900;
+    }
+
+    /* Stats row */
+    .stats {
+      display: flex;
+      margin-bottom: 100px;
+    }
+
+    .stat {
+      padding-right: 64px;
+      margin-right: 64px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat-num {
+      display: block;
+      font-size: 56px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+
+    /* CTA */
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .cta-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 1px;
+    }
+
+    .cta-url {
+      color: #DC2626;
+      font-weight: 700;
+    }
+
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border: 2px solid #DC2626;
+      border-radius: 50%;
+      color: #DC2626;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dl-bar"><span class="dl-info">1080×1350px · Instagram Feed</span><button id="dl-btn" data-filename="RIVAL-post-01-launch.png" onclick="downloadPost()">&#11015;&#xFE0E;  Descargar PNG</button></div>
+
+  <div class="canvas">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="bar-top"></div>
+    <div class="bar-bottom"></div>
+    <div class="bar-left"></div>
+    <div class="year-label">2026</div>
+    <div class="corner-accent"></div>
+
+    <div class="content">
+      <div class="eyebrow">Red Social · Fitness de Élite</div>
+      <div class="wordmark">RIVAL</div>
+      <div class="red-line"></div>
+      <div class="tagline">
+        La primera red social<br>
+        construida para el <span class="red">1%</span>.
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-num">850K+</span>
+          <span class="stat-label">Atletas</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">45M+</span>
+          <span class="stat-label">WODs</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">180</span>
+          <span class="stat-label">Países</span>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <div class="cta-text">Únete en <span class="cta-url">rivalfit.app</span></div>
+        <div class="cta-btn">→</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    async function downloadPost() {
+      const btn = document.getElementById('dl-btn');
+      const filename = btn.dataset.filename;
+      btn.textContent = 'Generando imagen...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.canvas');
+        const c = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = c.toDataURL('image/png', 1.0);
+        a.click();
+        btn.textContent = 'Descargado!';
+        setTimeout(() => { btn.textContent = '⬇  Descargar PNG'; btn.disabled = false; }, 2000);
+      } catch (e) {
+        alert('Error al generar: ' + e.message);
+        btn.textContent = '⬇  Descargar PNG';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
