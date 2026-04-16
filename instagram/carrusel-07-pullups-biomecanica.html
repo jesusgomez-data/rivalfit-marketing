@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RivalFit — Carrusel 07 Pull-ups Biomecánica</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; display:flex; flex-direction:column; align-items:center; padding:24px; gap:16px; font-family:'Outfit',sans-serif; }
+.page-title { color:#DC2626; font-size:13px; font-weight:700; letter-spacing:4px; text-transform:uppercase; }
+.dl-all { background:#DC2626; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer; letter-spacing:1px; }
+.dl-all:hover { background:#b91c1c; } .dl-all:disabled { background:#444; cursor:wait; }
+.slide-wrapper { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.slide-label { color:#555; font-size:11px; letter-spacing:3px; text-transform:uppercase; }
+.dl-btn { background:#1e1e1e; color:#aaa; border:1px solid #333; padding:8px 20px; border-radius:6px; font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; cursor:pointer; }
+.dl-btn:hover { border-color:#DC2626; color:#DC2626; }
+
+.canvas { width:1080px; height:1350px; background:#0a0a0a; position:relative; overflow:hidden; flex-shrink:0; }
+.noise { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px); background-size:28px 28px; z-index:1; pointer-events:none; }
+.top-bar { position:absolute; top:0; left:0; right:0; height:5px; background:#DC2626; z-index:20; }
+.bottom-bar { position:absolute; bottom:0; left:0; right:0; height:5px; background:#DC2626; z-index:20; }
+.logo-area { position:absolute; bottom:22px; left:70px; right:70px; display:flex; align-items:center; justify-content:space-between; z-index:20; }
+.logo { font-size:24px; font-weight:900; color:#fff; letter-spacing:-1px; }
+.logo span { color:#DC2626; }
+.slide-counter { font-size:11px; font-weight:700; letter-spacing:4px; color:rgba(255,255,255,0.25); text-transform:uppercase; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.12); }
+.dot.active { background:#DC2626; width:22px; border-radius:3px; }
+
+/* S1 COVER */
+#s1 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.3; }
+#s1 .glow { position:absolute; bottom:-100px; left:50%; transform:translateX(-50%); width:900px; height:600px; background:radial-gradient(ellipse, rgba(220,38,38,0.25) 0%, transparent 65%); z-index:2; }
+#s1 .overlay { position:absolute; inset:0; background:linear-gradient(to top, #0a0a0a 30%, transparent 70%); z-index:2; }
+#s1 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; height:100%; padding:0 70px 90px; }
+#s1 .tag { background:#DC2626; color:#fff; font-size:12px; font-weight:700; letter-spacing:6px; text-transform:uppercase; padding:8px 20px; margin-bottom:36px; display:inline-block; }
+#s1 .headline { font-size:160px; font-weight:900; line-height:0.88; color:#fff; text-transform:uppercase; letter-spacing:-6px; white-space:nowrap; margin-bottom:24px; }
+#s1 .headline span { color:#DC2626; }
+#s1 .sub { font-size:20px; font-weight:400; color:rgba(255,255,255,0.35); letter-spacing:2px; }
+
+/* S2 MÚSCULOS */
+#s2 .hero-img { position:absolute; right:0; top:0; bottom:0; width:42%; object-fit:cover; z-index:0; opacity:0.35; }
+#s2 .fade { position:absolute; top:0; bottom:0; right:0; width:55%; background:linear-gradient(to right, #0a0a0a 40%, transparent); z-index:2; }
+#s2 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:60px 70px; }
+#s2 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s2 .title { font-size:72px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:44px; white-space:nowrap; }
+#s2 .title span { color:#DC2626; }
+#s2 .muscle-row { display:flex; align-items:center; gap:20px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+#s2 .pct { font-size:44px; font-weight:900; color:#DC2626; min-width:90px; line-height:1; }
+#s2 .m-name { font-size:19px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+#s2 .m-role { font-size:14px; color:rgba(255,255,255,0.35); line-height:1.5; }
+
+/* S3 FASES */
+#s3 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.18; }
+#s3 .overlay { position:absolute; inset:0; background:rgba(10,10,10,0.75); z-index:1; }
+#s3 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; padding:60px 70px 90px; }
+#s3 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s3 .title { font-size:80px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:40px; white-space:nowrap; }
+#s3 .title span { color:#DC2626; }
+#s3 .phases { display:grid; grid-template-columns:1fr 1fr; gap:16px; flex:1; }
+#s3 .phase { background:rgba(255,255,255,0.04); padding:28px; border-bottom:3px solid #DC2626; }
+#s3 .ph-label { font-size:11px; font-weight:700; letter-spacing:5px; color:#DC2626; text-transform:uppercase; margin-bottom:10px; }
+#s3 .ph-name { font-size:24px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+#s3 .ph-desc { font-size:15px; color:rgba(255,255,255,0.38); line-height:1.6; }
+
+/* S4 TÉCNICA */
+#s4 .hero-img { position:absolute; right:0; top:0; bottom:0; width:40%; object-fit:cover; z-index:0; opacity:0.25; }
+#s4 .fade { position:absolute; top:0; bottom:0; right:0; width:50%; background:linear-gradient(to right, #0a0a0a 35%, transparent); z-index:2; }
+#s4 .glow { position:absolute; top:-100px; left:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(220,38,38,0.12) 0%, transparent 65%); z-index:2; }
+#s4 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:0 70px; }
+#s4 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s4 .title { font-size:76px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:40px; white-space:nowrap; }
+#s4 .title span { color:#DC2626; }
+#s4 .tech-list { display:flex; flex-direction:column; }
+#s4 .tech-item { display:flex; gap:20px; align-items:flex-start; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+#s4 .t-check { font-size:24px; color:#DC2626; font-weight:900; min-width:32px; line-height:1.2; }
+#s4 .t-title { font-size:19px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+#s4 .t-text { font-size:14px; color:rgba(255,255,255,0.35); line-height:1.55; }
+
+/* S5 ERRORES */
+#s5 .glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:700px; background:radial-gradient(circle, rgba(220,38,38,0.07) 0%, transparent 70%); z-index:1; }
+#s5 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; height:100%; padding:0 70px; }
+#s5 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s5 .title { font-size:80px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:44px; white-space:nowrap; }
+#s5 .title span { color:#DC2626; }
+#s5 .err-list { display:flex; flex-direction:column; gap:18px; }
+#s5 .err-item { display:flex; gap:20px; align-items:flex-start; background:rgba(220,38,38,0.05); border:1px solid rgba(220,38,38,0.15); padding:22px; }
+#s5 .e-x { font-size:26px; font-weight:900; color:#DC2626; line-height:1; min-width:34px; }
+#s5 .e-title { font-size:19px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+#s5 .e-text { font-size:14px; color:rgba(255,255,255,0.35); line-height:1.55; }
+
+/* S6 CTA */
+#s6 { background:#000; }
+#s6 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.2; }
+#s6 .glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:900px; height:900px; background:radial-gradient(circle, rgba(220,38,38,0.2) 0%, transparent 60%); z-index:2; }
+#s6 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; padding:0 70px; }
+#s6 .pre { font-size:13px; font-weight:700; letter-spacing:7px; color:rgba(220,38,38,0.8); text-transform:uppercase; margin-bottom:50px; }
+#s6 .headline { font-size:120px; font-weight:900; line-height:0.88; color:#fff; text-transform:uppercase; letter-spacing:-4px; margin-bottom:50px; }
+#s6 .headline span { color:#DC2626; }
+#s6 .headline .dim { color:rgba(255,255,255,0.12); }
+#s6 .url-box { border:2px solid rgba(220,38,38,0.5); padding:20px 60px; margin-bottom:24px; }
+#s6 .url-label { font-size:12px; font-weight:700; letter-spacing:5px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:8px; }
+#s6 .url { font-size:30px; font-weight:900; color:#DC2626; letter-spacing:2px; }
+#s6 .tagline { font-size:16px; color:rgba(255,255,255,0.18); letter-spacing:3px; font-style:italic; }
+</style>
+</head>
+<body>
+
+<div class="page-title">Carrusel 07 — Pull-ups · Biomecánica Perfecta</div>
+<button class="dl-all" onclick="downloadAll()">⬇ Descargar todos los slides (6 PNGs)</button>
+
+<!-- S1 COVER -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 1 / 6 — Portada</div>
+  <div class="canvas" id="s1">
+    <img class="hero-img" src="./images/pullups-hero.png" crossorigin="anonymous">
+    <div class="overlay"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="tag">Biomecánica · 07</div>
+      <div class="headline">PULL<span>UPS</span></div>
+      <div class="sub">Técnica · Músculos · Fases · Errores</div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">01 / 06</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s1','rival-pullups-01-portada.png')">⬇ Descargar Slide 1</button>
+</div>
+
+<!-- S2 MÚSCULOS -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 2 / 6 — Músculos</div>
+  <div class="canvas" id="s2">
+    <img class="hero-img" src="./images/pullups-muscles.png" crossorigin="anonymous">
+    <div class="fade"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="content">
+      <div class="section-label">02 · Músculos</div>
+      <div class="title">¿QUÉ <span>TRABAJA</span>?</div>
+      <div class="muscle-row"><div class="pct">45%</div><div><div class="m-name">Dorsal Ancho</div><div class="m-role">Músculo primario. Si no lo sientes, no estás haciendo el pull-up correctamente.</div></div></div>
+      <div class="muscle-row"><div class="pct">20%</div><div><div class="m-name">Bíceps Braquial</div><div class="m-role">Sinergista principal. Se activa más con agarre supino (chin-up).</div></div></div>
+      <div class="muscle-row"><div class="pct">15%</div><div><div class="m-name">Romboides y Trapecio</div><div class="m-role">Retraen y deprimen las escápulas. Clave para no lesionarse los hombros.</div></div></div>
+      <div class="muscle-row"><div class="pct">12%</div><div><div class="m-name">Redondo Mayor</div><div class="m-role">Asiste en la aducción del brazo. Más activo en rango completo.</div></div></div>
+      <div class="muscle-row" style="border-bottom:none"><div class="pct">8%</div><div><div class="m-name">Core</div><div class="m-role">Evita el balanceo. Sin core activado pierdes eficiencia y arriesgas la columna.</div></div></div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">02 / 06</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s2','rival-pullups-02-musculos.png')">⬇ Descargar Slide 2</button>
+</div>
+
+<!-- S3 FASES -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 3 / 6 — Fases</div>
+  <div class="canvas" id="s3">
+    <img class="hero-img" src="./images/pullups-hero.png" crossorigin="anonymous">
+    <div class="overlay"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="content">
+      <div class="section-label">03 · Fases del Movimiento</div>
+      <div class="title">LAS <span>4 FASES</span></div>
+      <div class="phases">
+        <div class="phase"><div class="ph-label">Fase 01</div><div class="ph-name">Colgado Activo</div><div class="ph-desc">Escápulas deprimidas, core activado, cuerpo en línea. NO te cuegues muerto — mantén tensión.</div></div>
+        <div class="phase"><div class="ph-label">Fase 02</div><div class="ph-name">Iniciación</div><div class="ph-desc">Deprime las escápulas ANTES de doblar los codos. Piensa en "meter los codos hacia las caderas".</div></div>
+        <div class="phase"><div class="ph-label">Fase 03</div><div class="ph-name">Pico</div><div class="ph-desc">Barbilla sobre la barra. Codos apuntan al suelo, pecho al frente. Aguanta 1 segundo.</div></div>
+        <div class="phase"><div class="ph-label">Fase 04</div><div class="ph-name">Excéntrico</div><div class="ph-desc">Baja en 3-4 segundos controlados. Aquí ocurre la mayor parte del crecimiento muscular.</div></div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">03 / 06</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s3','rival-pullups-03-fases.png')">⬇ Descargar Slide 3</button>
+</div>
+
+<!-- S4 TÉCNICA -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 4 / 6 — Técnica</div>
+  <div class="canvas" id="s4">
+    <img class="hero-img" src="./images/pullups-technique.png" crossorigin="anonymous">
+    <div class="fade"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="section-label">04 · Técnica Perfecta</div>
+      <div class="title">5 PUNTOS <span>CLAVE</span></div>
+      <div class="tech-list">
+        <div class="tech-item"><div class="t-check">✓</div><div><div class="t-title">Agarre ligeramente más ancho que hombros</div><div class="t-text">Ni muy abierto (lesión) ni muy cerrado (pierde dorsal). Pronado para pull-up clásico.</div></div></div>
+        <div class="tech-item"><div class="t-check">✓</div><div><div class="t-title">Escápulas deprimidas antes de subir</div><div class="t-text">Este "set" protege el manguito rotador y activa el dorsal. El paso que más gente omite.</div></div></div>
+        <div class="tech-item"><div class="t-check">✓</div><div><div class="t-title">Pecho hacia la barra, no cabeza arriba</div><div class="t-text">Inclina el torso ~15° atrás. Activa más dorsal y menos bíceps. Mucho más efectivo.</div></div></div>
+        <div class="tech-item"><div class="t-check">✓</div><div><div class="t-title">Core apretado, piernas juntas</div><div class="t-text">Evita el balanceo que roba energía. Glúteos contraídos, pies juntos o cruzados.</div></div></div>
+        <div class="tech-item" style="border-bottom:none"><div class="t-check">✓</div><div><div class="t-title">Extiende completamente al bajar</div><div class="t-text">Rango completo = máximo estiramiento del dorsal = zona de mayor crecimiento.</div></div></div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">04 / 06</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s4','rival-pullups-04-tecnica.png')">⬇ Descargar Slide 4</button>
+</div>
+
+<!-- S5 ERRORES -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 5 / 6 — Errores</div>
+  <div class="canvas" id="s5">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="section-label">05 · Errores que Destruyen</div>
+      <div class="title">ESTO TE <span>LESIONA</span></div>
+      <div class="err-list">
+        <div class="err-item"><div class="e-x">✕</div><div><div class="e-title">Kipping sin base de fuerza</div><div class="e-text">El kipping requiere movilidad avanzada. Sin 10 pull-ups strict, es una fórmula para lesionarse.</div></div></div>
+        <div class="err-item"><div class="e-x">✕</div><div><div class="e-title">Hombros levantados al colgarse</div><div class="e-text">Colgarse con hombros en las orejas desactiva el dorsal y sobrecarga el manguito rotador.</div></div></div>
+        <div class="err-item"><div class="e-x">✕</div><div><div class="e-title">Tirar solo con los brazos</div><div class="e-text">Si solo sientes bíceps y no dorsal, estás haciendo un curl en barra. Codos hacia caderas.</div></div></div>
+        <div class="err-item"><div class="e-x">✕</div><div><div class="e-title">Soltarse rápido al bajar</div><div class="e-text">Elimina la mitad del estímulo y aumenta el riesgo de lesión en hombro. Baja siempre controlado.</div></div></div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">05 / 06</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s5','rival-pullups-05-errores.png')">⬇ Descargar Slide 5</button>
+</div>
+
+<!-- S6 CTA -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 6 / 6 — CTA</div>
+  <div class="canvas" id="s6">
+    <img class="hero-img" src="./images/pullups-hero.png" crossorigin="anonymous">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="pre">Registra tus pull-ups · Supera tu récord</div>
+      <div class="headline">DOMINA<br>LA <span>BARRA</span><span class="dim">.</span></div>
+      <div class="url-box"><div class="url-label">Únete gratis en</div><div class="url">rivalfit.app</div></div>
+      <div class="tagline">Face Yourself. Conquer All.</div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVALFIT</div>
+      <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:4px">#RivalMindset</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s6','rival-pullups-06-cta.png')">⬇ Descargar Slide 6</button>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+async function downloadSlide(id, filename) {
+  const el = document.getElementById(id);
+  const btn = el.nextElementSibling;
+  btn.textContent = 'Generando...'; btn.disabled = true;
+  const c = await html2canvas(el, { scale:2, useCORS:true, allowTaint:true, backgroundColor:null, logging:false });
+  const a = document.createElement('a');
+  a.download = filename; a.href = c.toDataURL('image/png',1.0); a.click();
+  btn.textContent = '✓ Descargado'; btn.disabled = false;
+}
+async function downloadAll() {
+  const btn = document.querySelector('.dl-all');
+  btn.textContent = 'Generando todos...'; btn.disabled = true;
+  const slides = [
+    {id:'s1', name:'rival-pullups-01-portada.png'},
+    {id:'s2', name:'rival-pullups-02-musculos.png'},
+    {id:'s3', name:'rival-pullups-03-fases.png'},
+    {id:'s4', name:'rival-pullups-04-tecnica.png'},
+    {id:'s5', name:'rival-pullups-05-errores.png'},
+    {id:'s6', name:'rival-pullups-06-cta.png'},
+  ];
+  for (const s of slides) {
+    const el = document.getElementById(s.id);
+    const c = await html2canvas(el, { scale:2, useCORS:true, allowTaint:true, backgroundColor:null, logging:false });
+    const a = document.createElement('a');
+    a.download = s.name; a.href = c.toDataURL('image/png',1.0); a.click();
+    await new Promise(r => setTimeout(r, 900));
+  }
+  btn.textContent = '✓ Todos descargados'; btn.disabled = false;
+  setTimeout(() => { btn.textContent = '⬇ Descargar todos los slides (6 PNGs)'; }, 3000);
+}
+</script>
+</body>
+</html>

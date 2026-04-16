@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RivalFit — Carrusel 08 App Promo</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; display:flex; flex-direction:column; align-items:center; padding:24px; gap:16px; font-family:'Outfit',sans-serif; }
+.page-title { color:#DC2626; font-size:13px; font-weight:700; letter-spacing:4px; text-transform:uppercase; }
+.dl-all { background:#DC2626; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer; letter-spacing:1px; }
+.dl-all:hover { background:#b91c1c; } .dl-all:disabled { background:#444; cursor:wait; }
+.slide-wrapper { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.slide-label { color:#555; font-size:11px; letter-spacing:3px; text-transform:uppercase; }
+.dl-btn { background:#1e1e1e; color:#aaa; border:1px solid #333; padding:8px 20px; border-radius:6px; font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; cursor:pointer; }
+.dl-btn:hover { border-color:#DC2626; color:#DC2626; }
+
+.canvas { width:1080px; height:1350px; background:#0a0a0a; position:relative; overflow:hidden; flex-shrink:0; }
+.noise { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px); background-size:28px 28px; z-index:1; pointer-events:none; }
+.diagonal { position:absolute; inset:0; background:repeating-linear-gradient(-55deg, transparent, transparent 80px, rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px); z-index:1; pointer-events:none; }
+.top-bar { position:absolute; top:0; left:0; right:0; height:5px; background:#DC2626; z-index:20; }
+.bottom-bar { position:absolute; bottom:0; left:0; right:0; height:5px; background:#DC2626; z-index:20; }
+.logo-area { position:absolute; bottom:22px; left:70px; right:70px; display:flex; align-items:center; justify-content:space-between; z-index:20; }
+.logo { font-size:24px; font-weight:900; color:#fff; letter-spacing:-1px; }
+.logo span { color:#DC2626; }
+.slide-counter { font-size:11px; font-weight:700; letter-spacing:4px; color:rgba(255,255,255,0.25); text-transform:uppercase; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.12); }
+.dot.active { background:#DC2626; width:22px; border-radius:3px; }
+
+/* S1 COVER */
+#s1 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.25; }
+#s1 .glow-tl { position:absolute; top:-200px; left:-200px; width:800px; height:800px; background:radial-gradient(circle, rgba(220,38,38,0.2) 0%, transparent 60%); z-index:2; }
+#s1 .glow-br { position:absolute; bottom:-200px; right:-200px; width:600px; height:600px; background:radial-gradient(circle, rgba(220,38,38,0.12) 0%, transparent 60%); z-index:2; }
+#s1 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; padding:0 70px; }
+#s1 .badge { border:2px solid rgba(220,38,38,0.5); color:#DC2626; font-size:12px; font-weight:700; letter-spacing:7px; text-transform:uppercase; padding:10px 28px; margin-bottom:50px; display:inline-block; }
+#s1 .headline { font-size:140px; font-weight:900; line-height:0.88; color:#fff; text-transform:uppercase; letter-spacing:-5px; margin-bottom:16px; white-space:nowrap; }
+#s1 .headline span { color:#DC2626; }
+#s1 .sub { font-size:22px; font-weight:300; color:rgba(255,255,255,0.35); letter-spacing:3px; text-transform:uppercase; margin-bottom:60px; }
+#s1 .stats { display:flex; gap:70px; }
+#s1 .stat-num { font-size:52px; font-weight:900; color:#DC2626; line-height:1; }
+#s1 .stat-label { font-size:12px; font-weight:700; letter-spacing:3px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-top:4px; }
+
+/* S2 RED SOCIAL */
+#s2 .hero-img { position:absolute; right:0; top:0; bottom:0; width:45%; object-fit:cover; z-index:0; opacity:0.3; }
+#s2 .fade { position:absolute; top:0; bottom:0; right:0; width:55%; background:linear-gradient(to right, #0a0a0a 40%, transparent); z-index:2; }
+#s2 .glow { position:absolute; bottom:-100px; left:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(220,38,38,0.12) 0%, transparent 65%); z-index:2; }
+#s2 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:0 70px; }
+#s2 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s2 .title { font-size:76px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:48px; white-space:nowrap; }
+#s2 .title span { color:#DC2626; }
+#s2 .feat-list { display:flex; flex-direction:column; gap:20px; }
+#s2 .feat-item { background:rgba(255,255,255,0.04); border-left:3px solid #DC2626; padding:24px; }
+#s2 .f-title { font-size:20px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+#s2 .f-text { font-size:15px; color:rgba(255,255,255,0.38); line-height:1.55; }
+#s2 .f-tag { display:inline-block; margin-top:10px; background:rgba(220,38,38,0.12); color:#DC2626; font-size:10px; font-weight:700; letter-spacing:3px; padding:4px 10px; text-transform:uppercase; }
+
+/* S3 GYMS */
+#s3 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.2; }
+#s3 .overlay { position:absolute; inset:0; background:rgba(10,10,10,0.78); z-index:1; }
+#s3 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; padding:60px 70px 90px; }
+#s3 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s3 .title { font-size:72px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:40px; white-space:nowrap; }
+#s3 .title span { color:#DC2626; }
+#s3 .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; flex:1; }
+#s3 .g-card { background:rgba(255,255,255,0.04); border-bottom:3px solid #DC2626; padding:28px; }
+#s3 .g-icon { font-size:44px; margin-bottom:12px; }
+#s3 .g-title { font-size:20px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+#s3 .g-text { font-size:14px; color:rgba(255,255,255,0.38); line-height:1.55; }
+
+/* S4 VS */
+#s4 .left { position:absolute; left:0; top:0; bottom:0; width:50%; background:#0d0d0d; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:60px 40px; }
+#s4 .right { position:absolute; right:0; top:0; bottom:0; width:50%; background:#0a0a0a; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:60px 40px; }
+#s4 .divider { position:absolute; left:50%; top:0; bottom:0; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:20; gap:0; }
+#s4 .div-line { width:2px; flex:1; background:rgba(220,38,38,0.3); }
+#s4 .vs { background:#DC2626; color:#fff; font-size:20px; font-weight:900; padding:16px 12px; letter-spacing:1px; }
+#s4 .side-label { font-size:11px; font-weight:700; letter-spacing:6px; text-transform:uppercase; margin-bottom:20px; }
+#s4 .left .side-label { color:rgba(255,255,255,0.15); }
+#s4 .right .side-label { color:#DC2626; }
+#s4 .side-word { font-size:56px; font-weight:900; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:24px; }
+#s4 .left .side-word { color:rgba(255,255,255,0.12); }
+#s4 .right .side-word { color:#fff; }
+#s4 .side-items { display:flex; flex-direction:column; gap:10px; width:100%; }
+#s4 .s-item { font-size:14px; padding:10px; text-align:left; }
+#s4 .left .s-item { color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.03); }
+#s4 .right .s-item { color:rgba(255,255,255,0.7); background:rgba(220,38,38,0.08); border-left:2px solid #DC2626; padding-left:14px; }
+#s4 .bottom-strip { position:absolute; bottom:0; left:0; right:0; height:70px; background:#DC2626; display:flex; align-items:center; justify-content:space-between; padding:0 70px; z-index:20; }
+#s4 .strip-text { font-size:16px; font-weight:700; color:#fff; letter-spacing:3px; text-transform:uppercase; }
+
+/* S5 CTA */
+#s5 { background:#000; }
+#s5 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.18; }
+#s5 .glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:900px; height:900px; background:radial-gradient(circle, rgba(220,38,38,0.22) 0%, transparent 58%); z-index:2; }
+#s5 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; padding:0 70px; }
+#s5 .pre { font-size:13px; font-weight:700; letter-spacing:8px; color:rgba(220,38,38,0.8); text-transform:uppercase; margin-bottom:50px; border:1px solid rgba(220,38,38,0.3); padding:10px 28px; display:inline-block; }
+#s5 .headline { font-size:108px; font-weight:900; line-height:0.88; color:#fff; text-transform:uppercase; letter-spacing:-4px; margin-bottom:50px; }
+#s5 .headline span { color:#DC2626; }
+#s5 .headline .dim { color:rgba(255,255,255,0.1); }
+#s5 .cta-btn { background:#DC2626; color:#fff; font-size:22px; font-weight:900; letter-spacing:5px; text-transform:uppercase; padding:24px 80px; margin-bottom:30px; display:inline-block; }
+#s5 .url { font-size:28px; font-weight:300; color:rgba(255,255,255,0.4); letter-spacing:4px; margin-bottom:30px; }
+#s5 .tagline { font-size:16px; color:rgba(255,255,255,0.15); letter-spacing:3px; font-style:italic; }
+</style>
+</head>
+<body>
+
+<div class="page-title">Carrusel 08 — RivalFit App · Por Qué Registrarte Hoy</div>
+<button class="dl-all" onclick="downloadAll()">⬇ Descargar todos los slides (5 PNGs)</button>
+
+<!-- S1 COVER -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 1 / 5 — Portada</div>
+  <div class="canvas" id="s1">
+    <img class="hero-img" src="./images/app-hero.png" crossorigin="anonymous">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="diagonal"></div>
+    <div class="glow-tl"></div>
+    <div class="glow-br"></div>
+    <div class="content">
+      <div class="badge">La App Fitness #1 · 2026</div>
+      <div class="headline">RIVAL<span>FIT</span></div>
+      <div class="sub">Red Social · Gestión · IA</div>
+      <div class="stats">
+        <div style="text-align:center"><div class="stat-num">100%</div><div class="stat-label">Gratis</div></div>
+        <div style="text-align:center"><div class="stat-num">IA</div><div class="stat-label">Programación</div></div>
+        <div style="text-align:center"><div class="stat-num">∞</div><div class="stat-label">Comunidad</div></div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">01 / 05</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s1','rival-app-01-portada.png')">⬇ Descargar Slide 1</button>
+</div>
+
+<!-- S2 RED SOCIAL -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 2 / 5 — Red Social</div>
+  <div class="canvas" id="s2">
+    <img class="hero-img" src="./images/app-community.png" crossorigin="anonymous">
+    <div class="fade"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="section-label">02 · Red Social Fitness</div>
+      <div class="title">TU <span>COMUNIDAD</span></div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="f-title">Feed de Entrenamientos</div><div class="f-text">Comparte WODs, PRs y transformaciones con atletas reales. No fotos bonitas — resultados reales.</div><div class="f-tag">Social</div></div>
+        <div class="feat-item"><div class="f-title">Rankings Globales</div><div class="f-text">Compite contra atletas de tu nivel en ejercicios específicos. Sube en el ranking cada semana.</div><div class="f-tag">Competición</div></div>
+        <div class="feat-item"><div class="f-title">Tracking de PRs</div><div class="f-text">La app calcula tu progreso, te notifica cuando estás cerca de un PR y celebra cada logro.</div><div class="f-tag">Progreso</div></div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">02 / 05</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s2','rival-app-02-red-social.png')">⬇ Descargar Slide 2</button>
+</div>
+
+<!-- S3 GYMS -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 3 / 5 — Para Gyms y Boxes</div>
+  <div class="canvas" id="s3">
+    <img class="hero-img" src="./images/app-gym.png" crossorigin="anonymous">
+    <div class="overlay"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="content">
+      <div class="section-label">03 · Para Gyms y Boxes</div>
+      <div class="title">GESTIONA TU <span>CENTRO</span></div>
+      <div class="grid">
+        <div class="g-card"><div class="g-icon">🤖</div><div class="g-title">WODs con IA</div><div class="g-text">Programación generada con inteligencia artificial adaptada al nivel de tu box.</div></div>
+        <div class="g-card"><div class="g-icon">📋</div><div class="g-title">Gestión Miembros</div><div class="g-text">Membresías, pagos, check-in y comunicaciones desde un panel unificado.</div></div>
+        <div class="g-card"><div class="g-icon">📊</div><div class="g-title">Analytics</div><div class="g-text">Retención, asistencia y crecimiento de tu negocio en tiempo real.</div></div>
+        <div class="g-card"><div class="g-icon">🏪</div><div class="g-title">Tienda Online</div><div class="g-text">Vende membresías y merchandise directamente desde la plataforma.</div></div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">03 / 05</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s3','rival-app-03-gyms.png')">⬇ Descargar Slide 3</button>
+</div>
+
+<!-- S4 VS -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 4 / 5 — Sin App vs Con RivalFit</div>
+  <div class="canvas" id="s4">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="left">
+      <div class="side-label">Sin App</div>
+      <div class="side-word">ENTRE<br>NAS</div>
+      <div class="side-items">
+        <div class="s-item">❌ Sin registro de progreso</div>
+        <div class="s-item">❌ Sin comunidad fitness</div>
+        <div class="s-item">❌ Sin programación IA</div>
+        <div class="s-item">❌ Sin competición real</div>
+        <div class="s-item">❌ Sin gestión de tu gym</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="side-label">Con RivalFit</div>
+      <div class="side-word">EVOLU<br>CIONAS</div>
+      <div class="side-items">
+        <div class="s-item">✅ Tracks PRs automáticamente</div>
+        <div class="s-item">✅ Comunidad global de atletas</div>
+        <div class="s-item">✅ WODs generados por IA</div>
+        <div class="s-item">✅ Rankings semanales</div>
+        <div class="s-item">✅ Dashboard completo de gym</div>
+      </div>
+    </div>
+    <div class="divider"><div class="div-line"></div><div class="vs">VS</div><div class="div-line"></div></div>
+    <div class="bottom-strip">
+      <span class="strip-text">La diferencia es RivalFit</span>
+      <span class="strip-text">rivalfit.app</span>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s4','rival-app-04-vs.png')">⬇ Descargar Slide 4</button>
+</div>
+
+<!-- S5 CTA -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 5 / 5 — CTA</div>
+  <div class="canvas" id="s5">
+    <img class="hero-img" src="./images/app-hero.png" crossorigin="anonymous">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="pre">Registro Gratuito</div>
+      <div class="headline">ÚNETE<br>A LA <span>ÉLITE</span><span class="dim">.</span></div>
+      <div class="cta-btn">Empieza ahora</div>
+      <div class="url">rivalfit.app</div>
+      <div class="tagline">Face Yourself. Conquer All.</div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVALFIT</div>
+      <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:4px">#RivalMindset</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s5','rival-app-05-cta.png')">⬇ Descargar Slide 5</button>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+async function downloadSlide(id, filename) {
+  const el = document.getElementById(id);
+  const btn = el.nextElementSibling;
+  btn.textContent = 'Generando...'; btn.disabled = true;
+  const c = await html2canvas(el, { scale:2, useCORS:true, allowTaint:true, backgroundColor:null, logging:false });
+  const a = document.createElement('a');
+  a.download = filename; a.href = c.toDataURL('image/png',1.0); a.click();
+  btn.textContent = '✓ Descargado'; btn.disabled = false;
+}
+async function downloadAll() {
+  const btn = document.querySelector('.dl-all');
+  btn.textContent = 'Generando todos...'; btn.disabled = true;
+  const slides = [
+    {id:'s1', name:'rival-app-01-portada.png'},
+    {id:'s2', name:'rival-app-02-red-social.png'},
+    {id:'s3', name:'rival-app-03-gyms.png'},
+    {id:'s4', name:'rival-app-04-vs.png'},
+    {id:'s5', name:'rival-app-05-cta.png'},
+  ];
+  for (const s of slides) {
+    const el = document.getElementById(s.id);
+    const c = await html2canvas(el, { scale:2, useCORS:true, allowTaint:true, backgroundColor:null, logging:false });
+    const a = document.createElement('a');
+    a.download = s.name; a.href = c.toDataURL('image/png',1.0); a.click();
+    await new Promise(r => setTimeout(r, 900));
+  }
+  btn.textContent = '✓ Todos descargados'; btn.disabled = false;
+  setTimeout(() => { btn.textContent = '⬇ Descargar todos los slides (5 PNGs)'; }, 3000);
+}
+</script>
+</body>
+</html>

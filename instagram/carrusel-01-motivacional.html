@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RivalFit — Carrusel 01 Motivacional</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; display:flex; flex-direction:column; align-items:center; padding:24px; gap:16px; font-family:'Outfit',sans-serif; }
+
+.page-title { color:#DC2626; font-size:13px; font-weight:700; letter-spacing:4px; text-transform:uppercase; }
+
+.dl-all {
+  background:#DC2626; color:#fff; border:none; padding:12px 32px;
+  border-radius:8px; font-family:'Outfit',sans-serif; font-size:15px;
+  font-weight:700; cursor:pointer; letter-spacing:1px;
+}
+.dl-all:hover { background:#b91c1c; }
+.dl-all:disabled { background:#444; cursor:wait; }
+
+.slide-wrapper { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.slide-label { color:#555; font-size:11px; letter-spacing:3px; text-transform:uppercase; }
+
+.dl-btn {
+  background:#1e1e1e; color:#aaa; border:1px solid #333; padding:8px 20px;
+  border-radius:6px; font-family:'Outfit',sans-serif; font-size:12px;
+  font-weight:600; cursor:pointer;
+}
+.dl-btn:hover { border-color:#DC2626; color:#DC2626; }
+
+/* ─── CANVAS BASE ─── */
+.canvas {
+  width:1080px; height:1350px;
+  background:#0a0a0a;
+  position:relative; overflow:hidden;
+  flex-shrink:0;
+}
+
+/* Noise texture */
+.canvas::before {
+  content:''; position:absolute; inset:0;
+  background-image:radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:28px 28px; z-index:0;
+}
+
+/* ─── SLIDE 1 ─── */
+#s1 { background:#0a0a0a; }
+#s1 .glow {
+  position:absolute; bottom:-200px; right:-200px;
+  width:900px; height:900px;
+  background:radial-gradient(circle, rgba(220,38,38,0.2) 0%, transparent 60%);
+}
+#s1 .glow2 {
+  position:absolute; top:-100px; left:-200px;
+  width:600px; height:600px;
+  background:radial-gradient(circle, rgba(220,38,38,0.06) 0%, transparent 65%);
+}
+#s1 .diagonal {
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    -55deg,
+    transparent, transparent 80px,
+    rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px
+  );
+}
+#s1 .top-bar { position:absolute; top:0; left:0; right:0; height:4px; background:#DC2626; }
+#s1 .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:4px; background:#DC2626; }
+#s1 .content {
+  position:relative; z-index:10;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:flex-start;
+  height:100%; padding:0 90px;
+}
+#s1 .eyebrow {
+  font-size:12px; font-weight:700; letter-spacing:8px;
+  color:rgba(220,38,38,0.7); text-transform:uppercase;
+  margin-bottom:64px;
+}
+#s1 .headline {
+  font-size:132px; font-weight:900; line-height:0.88;
+  color:#fff; text-transform:uppercase; letter-spacing:-4px;
+  margin-bottom:20px;
+}
+#s1 .headline .red { color:#DC2626; }
+#s1 .headline .dim { color:rgba(255,255,255,0.18); }
+#s1 .sub {
+  font-size:22px; font-weight:400; color:rgba(255,255,255,0.4);
+  margin-top:56px; letter-spacing:1px;
+}
+#s1 .logo-area {
+  position:absolute; bottom:60px; left:90px; right:90px;
+  display:flex; align-items:center; justify-content:space-between;
+  z-index:10;
+}
+#s1 .logo { font-size:28px; font-weight:900; color:#fff; letter-spacing:-1px; }
+#s1 .logo span { color:#DC2626; }
+#s1 .dots { display:flex; gap:8px; }
+#s1 .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); }
+#s1 .dot.active { background:#DC2626; width:24px; border-radius:4px; }
+#s1 .slide-counter {
+  font-size:11px; font-weight:700; letter-spacing:4px;
+  color:rgba(255,255,255,0.25); text-transform:uppercase;
+}
+
+/* ─── SLIDE 2 ─── */
+#s2 .glow {
+  position:absolute; bottom:-100px; left:-100px;
+  width:700px; height:700px;
+  background:radial-gradient(circle, rgba(220,38,38,0.16) 0%, transparent 65%);
+}
+#s2 .content {
+  position:relative; z-index:10;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  text-align:center; height:100%; padding:0 90px;
+}
+#s2 .pre {
+  font-size:22px; font-weight:300; color:rgba(255,255,255,0.35);
+  letter-spacing:2px; margin-bottom:32px;
+}
+#s2 .main-word {
+  font-size:160px; font-weight:900; line-height:0.85;
+  text-transform:uppercase; letter-spacing:-6px;
+}
+#s2 .w1 { color:rgba(255,255,255,0.9); display:block; }
+#s2 .w2 { color:#DC2626; display:block; }
+#s2 .separator {
+  width:80px; height:3px; background:#DC2626;
+  margin:48px auto;
+}
+#s2 .post {
+  font-size:24px; font-weight:400; color:rgba(255,255,255,0.4);
+  letter-spacing:1px; line-height:1.6;
+}
+#s2 .logo-area {
+  position:absolute; bottom:60px; left:90px; right:90px;
+  display:flex; align-items:center; justify-content:space-between; z-index:10;
+}
+#s2 .logo { font-size:24px; font-weight:900; color:#fff; }
+#s2 .logo span { color:#DC2626; }
+#s2 .slide-counter { font-size:11px; font-weight:700; letter-spacing:4px; color:rgba(255,255,255,0.2); }
+
+/* ─── SLIDE 3 ─── */
+#s3 .left-half {
+  position:absolute; left:0; top:0; bottom:0; width:50%;
+  background:#141414;
+  display:flex; flex-direction:column; justify-content:center;
+  align-items:center; text-align:center; padding:60px 40px;
+}
+#s3 .right-half {
+  position:absolute; right:0; top:0; bottom:0; width:50%;
+  background:#0a0a0a;
+  display:flex; flex-direction:column; justify-content:center;
+  align-items:center; text-align:center; padding:60px 40px;
+}
+#s3 .divider {
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  display:flex; flex-direction:column; align-items:center;
+  z-index:20;
+}
+#s3 .divider-line {
+  width:3px; height:200px; background:#DC2626;
+}
+#s3 .vs-badge {
+  background:#DC2626; color:#fff;
+  font-size:22px; font-weight:900; padding:14px 12px;
+  letter-spacing:1px;
+}
+#s3 .side-label {
+  font-size:11px; font-weight:700; letter-spacing:6px;
+  text-transform:uppercase; margin-bottom:24px;
+}
+#s3 .left-half .side-label { color:rgba(255,255,255,0.2); }
+#s3 .right-half .side-label { color:#DC2626; }
+#s3 .side-text {
+  font-size:64px; font-weight:900; line-height:0.9;
+  text-transform:uppercase; letter-spacing:-2px;
+}
+#s3 .left-half .side-text { color:rgba(255,255,255,0.2); }
+#s3 .right-half .side-text { color:#fff; }
+#s3 .bottom-banner {
+  position:absolute; bottom:0; left:0; right:0;
+  background:#DC2626; padding:28px 90px;
+  display:flex; align-items:center; justify-content:space-between;
+  z-index:10;
+}
+#s3 .bottom-text {
+  font-size:28px; font-weight:900; color:#fff;
+  text-transform:uppercase; letter-spacing:2px;
+}
+#s3 .logo { font-size:22px; font-weight:900; color:rgba(255,255,255,0.6); }
+
+/* ─── SLIDE 4 ─── */
+#s4 { background:#050505; }
+#s4 .content {
+  position:relative; z-index:10;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:flex-start;
+  height:100%; padding:0 90px;
+}
+#s4 .line-gray {
+  font-size:24px; font-weight:300; color:rgba(255,255,255,0.3);
+  letter-spacing:2px; margin-bottom:40px;
+}
+#s4 .rule { width:100%; height:1px; background:rgba(220,38,38,0.3); margin:40px 0; }
+#s4 .big { font-size:130px; font-weight:900; line-height:0.88; letter-spacing:-4px; text-transform:uppercase; }
+#s4 .big.white { color:#fff; }
+#s4 .big.red { color:#DC2626; }
+#s4 .note { font-size:20px; font-weight:400; color:rgba(255,255,255,0.35); line-height:1.7; }
+#s4 .note strong { color:rgba(255,255,255,0.7); font-weight:600; }
+#s4 .logo-area {
+  position:absolute; bottom:60px; left:90px; right:90px;
+  display:flex; align-items:center; justify-content:space-between; z-index:10;
+}
+#s4 .logo { font-size:24px; font-weight:900; color:#fff; }
+#s4 .logo span { color:#DC2626; }
+#s4 .slide-counter { font-size:11px; font-weight:700; letter-spacing:4px; color:rgba(255,255,255,0.2); }
+
+/* ─── SLIDE 5 CTA ─── */
+#s5 { background:#DC2626; }
+#s5 .bg-pattern {
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 60px,
+    rgba(0,0,0,0.06) 60px, rgba(0,0,0,0.06) 61px
+  );
+}
+#s5 .glow {
+  position:absolute; top:-200px; right:-200px;
+  width:800px; height:800px;
+  background:radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 60%);
+}
+#s5 .content {
+  position:relative; z-index:10;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  text-align:center; height:100%; padding:0 90px;
+}
+#s5 .headline {
+  font-size:120px; font-weight:900; line-height:0.88;
+  color:#fff; text-transform:uppercase; letter-spacing:-4px;
+  margin-bottom:48px;
+}
+#s5 .headline .dark { color:rgba(0,0,0,0.25); }
+#s5 .url-box {
+  background:rgba(0,0,0,0.2); border:2px solid rgba(255,255,255,0.3);
+  border-radius:16px; padding:24px 60px;
+  margin-bottom:32px;
+}
+#s5 .url-label { font-size:14px; color:rgba(255,255,255,0.6); letter-spacing:3px; margin-bottom:8px; text-transform:uppercase; }
+#s5 .url { font-size:52px; font-weight:900; color:#fff; letter-spacing:-1px; }
+#s5 .cta-sub { font-size:20px; color:rgba(255,255,255,0.7); font-weight:400; }
+#s5 .logo-area {
+  position:absolute; bottom:60px; left:90px; right:90px;
+  display:flex; align-items:center; justify-content:space-between; z-index:10;
+}
+#s5 .logo { font-size:24px; font-weight:900; color:rgba(255,255,255,0.5); }
+#s5 .tag { font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:4px; }
+</style>
+</head>
+<body>
+
+<div class="page-title">Carrusel 01 — Motivacional "El que no compite consigo mismo, pierde"</div>
+<button class="dl-all" onclick="downloadAll()">⬇  Descargar todos los slides (5 PNGs)</button>
+
+<!-- ═══════════════════════════════ SLIDE 1 ═══════════════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 1 / 5 — Portada</div>
+  <div class="canvas" id="s1">
+    <div class="glow"></div>
+    <div class="glow2"></div>
+    <div class="diagonal"></div>
+    <div class="top-bar"></div>
+    <div class="bottom-bar"></div>
+    <div class="content">
+      <div class="eyebrow">Rival Mindset · 01</div>
+      <div class="headline">
+        EL QUE<br>
+        NO COM<span class="red">-</span><br>
+        PITE<br>
+        CONSIGO<br>
+        <span class="red">MISMO,</span><br>
+        <span class="dim">PIERDE.</span>
+      </div>
+      <div class="sub">Desliza y compite con tu mejor versión →</div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="slide-counter">01 / 05</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s1','rival-motivacional-01-portada.png')">⬇ Descargar Slide 1</button>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 2 ═══════════════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 2 / 5 — Cada día que entrenas</div>
+  <div class="canvas" id="s2">
+    <div class="glow"></div>
+    <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.025) 1px,transparent 1px);background-size:28px 28px;"></div>
+    <div class="content">
+      <div class="pre">Cada día que entrenas...</div>
+      <div class="main-word">
+        <span class="w1">ESTÁS</span>
+        <span class="w2">GANANDO.</span>
+      </div>
+      <div class="separator"></div>
+      <div class="post">
+        Una versión más fuerte.<br>
+        Una versión más disciplinada.<br>
+        <strong style="color:rgba(255,255,255,0.7)">La mejor versión de ti mismo.</strong>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="slide-counter">02 / 05</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s2','rival-motivacional-02-ganando.png')">⬇ Descargar Slide 2</button>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 3 ═══════════════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 3 / 5 — Quien eres vs quien puedes ser</div>
+  <div class="canvas" id="s3">
+    <div class="left-half">
+      <div class="side-label">Hoy</div>
+      <div class="side-text">QUIEN<br>ERES</div>
+    </div>
+    <div class="right-half">
+      <div class="side-label">Mañana</div>
+      <div class="side-text">QUIEN<br>PUEDES<br>SER</div>
+    </div>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="vs-badge">VS</div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="bottom-banner">
+      <div class="bottom-text">La diferencia es el trabajo.</div>
+      <div class="logo">RIVALFIT</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s3','rival-motivacional-03-vs.png')">⬇ Descargar Slide 3</button>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 4 ═══════════════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 4 / 5 — Disciplina</div>
+  <div class="canvas" id="s4">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);background-size:32px 32px;"></div>
+    <div class="content">
+      <div class="line-gray">No necesitas motivación.</div>
+      <div class="rule"></div>
+      <div class="big white">NECESITAS</div>
+      <div class="big red">DISCIPLINA.</div>
+      <div class="rule"></div>
+      <div class="note">
+        La motivación viene y va.<br>
+        <strong>La disciplina construye atletas.</strong>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="slide-counter">04 / 05</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s4','rival-motivacional-04-disciplina.png')">⬇ Descargar Slide 4</button>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 5 CTA ═══════════════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 5 / 5 — CTA</div>
+  <div class="canvas" id="s5">
+    <div class="bg-pattern"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="headline">
+        ¿LISTO PARA<br>
+        COMPETIR<br>
+        <span class="dark">CONTIGO?</span>
+      </div>
+      <div class="url-box">
+        <div class="url-label">Únete gratis en</div>
+        <div class="url">rivalfit.app</div>
+      </div>
+      <div class="cta-sub">Red social fitness. Gratis para siempre.</div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVALFIT</div>
+      <div class="tag">#RivalMindset</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s5','rival-motivacional-05-cta.png')">⬇ Descargar Slide 5</button>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+async function downloadSlide(id, filename) {
+  const el = document.getElementById(id);
+  const btn = el.nextElementSibling;
+  btn.textContent = 'Generando...'; btn.disabled = true;
+  const c = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+  const a = document.createElement('a');
+  a.download = filename; a.href = c.toDataURL('image/png',1.0); a.click();
+  btn.textContent = '✓ Descargado'; btn.disabled = false;
+}
+
+async function downloadAll() {
+  const btn = document.querySelector('.dl-all');
+  btn.textContent = 'Generando todos...'; btn.disabled = true;
+  const slides = [
+    {id:'s1', name:'rival-motivacional-01-portada.png'},
+    {id:'s2', name:'rival-motivacional-02-ganando.png'},
+    {id:'s3', name:'rival-motivacional-03-vs.png'},
+    {id:'s4', name:'rival-motivacional-04-disciplina.png'},
+    {id:'s5', name:'rival-motivacional-05-cta.png'},
+  ];
+  for (const s of slides) {
+    const el = document.getElementById(s.id);
+    const c = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+    const a = document.createElement('a');
+    a.download = s.name; a.href = c.toDataURL('image/png',1.0); a.click();
+    await new Promise(r => setTimeout(r, 800));
+  }
+  btn.textContent = '✓ Todos descargados'; btn.disabled = false;
+  setTimeout(() => { btn.textContent = '⬇  Descargar todos los slides (5 PNGs)'; }, 3000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "published": [
+    {
+      "date": "2026-04-03T14:04:59.877565",
+      "post_id": "anatomia-core-01",
+      "carrusel": "carrusel-05-anatomia-core",
+      "instagram_id": "18127238824583124",
+      "success": true
+    },
+    {
+      "date": "2026-04-06T10:52:37.274677",
+      "post_id": "motivacional-01",
+      "carrusel": "carrusel-01-motivacional",
+      "instagram_id": "18118328818648695",
+      "success": true
+    },
+    {
+      "date": "2026-04-07T12:54:05.052681",
+      "post_id": "biomecanica-squat-01",
+      "carrusel": "carrusel-02-biomecanica-squat",
+      "instagram_id": "18117217453631595",
+      "success": true
+    },
+    {
+      "date": "2026-04-08T12:00:43.521233",
+      "post_id": "promo-app-01",
+      "carrusel": "carrusel-03-promo-app",
+      "instagram_id": "18069653489298513",
+      "success": true
+    },
+    {
+      "date": "2026-04-10T14:26:44.124329",
+      "post_id": "gestion-centros-01",
+      "carrusel": "carrusel-04-gestion-centros",
+      "instagram_id": "17920464003303234",
+      "success": true
+    },
+    {
+      "date": "2026-04-13T10:20:10.739842",
+      "post_id": "motivacional-01",
+      "carrusel": "carrusel-01-motivacional",
+      "instagram_id": "17965677648048641",
+      "success": true
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "_info": "Calendario semanal de publicacion. day_of_week: Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday",
+  "_rotacion": "Si hay varios posts para el mismo dia, rota cada semana automaticamente.",
+
+  "posts": [
+    {
+      "id": "motivacional-01",
+      "day_of_week": "Monday",
+      "hora": "09:00",
+      "carrusel": "carrusel-01-motivacional",
+      "titulo": "El que no compite consigo mismo, pierde",
+      "caption": "No hay atajos. Solo trabajo.\n\n¿Estás compitiendo contigo mismo cada día?\n\nSíguenos para motivación diaria y únete a la comunidad de atletas reales en rivalfit.app 🔥",
+      "hashtags": "#RivalMindset #Fitness #Motivacion #CrossFit #Gym #Entrenamiento #Atleta #NoExcuses #Disciplina #MentalidadGanadora #RivalFit #FuerzaMental #Sport #FitnessMotivation #WorkoutMotivation",
+      "activo": true
+    },
+    {
+      "id": "biomecanica-squat-01",
+      "day_of_week": "Tuesday",
+      "hora": "18:00",
+      "carrusel": "carrusel-02-biomecanica-squat",
+      "titulo": "Sentadilla perfecta: la ciencia detras del movimiento",
+      "caption": "La técnica no es opcional. Es obligatoria.\n\nGuarda este post 📌 — lo vas a necesitar antes de tu próxima sesión de squats.\n\n¿Cuál de estos errores reconoces en ti? 👇",
+      "hashtags": "#Biomecanica #Sentadilla #Squat #CrossFit #FuerzaYPotencia #EntrenamientoInteligente #PersonalTrainer #RivalFit #TecnicaPerfecta #Powerlifting #GymScience #StrengthTraining #FitnessEducation",
+      "activo": true
+    },
+    {
+      "id": "promo-app-01",
+      "day_of_week": "Wednesday",
+      "hora": "12:00",
+      "carrusel": "carrusel-03-promo-app",
+      "titulo": "La red social que los atletas merecian",
+      "caption": "Cansado de ver recetas y viajes en Instagram cuando solo quieres contenido de entrenamiento? 🏋️\n\nRivalFit es la red social que los atletas llevaban años esperando.\n\nGratis para siempre 👇 rivalfit.app",
+      "hashtags": "#RivalFit #FitnessApp #RedSocialFitness #Gym #CrossFit #Atletas #AppFitness #FitnessLife #GymCommunity #WorkoutApp #FitnessGoals #AtletasReales #SportApp",
+      "activo": true
+    },
+    {
+      "id": "anatomia-core-01",
+      "day_of_week": "Thursday",
+      "hora": "19:00",
+      "carrusel": "carrusel-05-anatomia-core",
+      "titulo": "El core: mucho mas que abdominales",
+      "caption": "El core no son los abdominales. Es un sistema completo de 360° que determina toda tu fuerza.\n\nGuarda este post 📌 y llévalo a tu próximo entrenamiento. Tu espalda te lo agradecerá.\n\n¿Ya entrenas el core correctamente? Cuéntanos 👇",
+      "hashtags": "#Anatomia #Core #AbdominalesReales #EntrenamientoInteligente #FitnessEducation #Biomecanica #PersonalTrainer #RivalFit #CoreStrength #FunctionalFitness #GymScience #SportScience #Salud",
+      "activo": true
+    },
+    {
+      "id": "gestion-centros-01",
+      "day_of_week": "Friday",
+      "hora": "10:00",
+      "carrusel": "carrusel-04-gestion-centros",
+      "titulo": "Software de gestion para gyms y boxes",
+      "caption": "Los mejores gyms del mundo no gestionan en papel ni Excel. Usan tecnología que trabaja mientras tú entrenas. 💻\n\nGestiona tu centro en rivalfit.app — gratis para empezar.",
+      "hashtags": "#GestionGym #SoftwareGym #CrossFitBox #GymOwner #EntrenadorPersonal #FitnessBusiness #RivalFit #GymManagement #BoxCrossfit #FitnessIndustry #GymLife #FitnessEntrepreneur",
+      "activo": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Credenciales — NUNCA subir al repo
+instagram/scheduler/config.json
+
+# Imagenes exportadas (se regeneran localmente)
+instagram/exported-png/
+instagram/exported-jpg/
+instagram/images/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Logs locales (GitHub Actions genera los suyos)
+instagram/scheduler/logs/
+
+# Node
+node_modules/

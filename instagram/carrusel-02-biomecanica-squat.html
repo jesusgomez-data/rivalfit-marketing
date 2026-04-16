@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RivalFit — Carrusel 02 Biomecánica Squat</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; display:flex; flex-direction:column; align-items:center; padding:24px; gap:16px; font-family:'Outfit',sans-serif; }
+.page-title { color:#DC2626; font-size:13px; font-weight:700; letter-spacing:4px; text-transform:uppercase; }
+.dl-all { background:#DC2626; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer; }
+.dl-all:hover { background:#b91c1c; }
+.dl-all:disabled { background:#444; cursor:wait; }
+.slide-wrapper { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.slide-label { color:#555; font-size:11px; letter-spacing:3px; text-transform:uppercase; }
+.dl-btn { background:#1e1e1e; color:#aaa; border:1px solid #333; padding:8px 20px; border-radius:6px; font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; cursor:pointer; }
+.dl-btn:hover { border-color:#DC2626; color:#DC2626; }
+
+.canvas { width:1080px; height:1350px; background:#0a0a0a; position:relative; overflow:hidden; flex-shrink:0; font-family:'Outfit',sans-serif; }
+
+/* ─── GRID TEXTURE ─── */
+.grid-tex {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+
+/* ─── SHARED ─── */
+.top-accent { position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#DC2626,#7c3aed,#DC2626); }
+.logo-row { position:absolute; bottom:52px; left:80px; right:80px; display:flex; align-items:center; justify-content:space-between; z-index:20; }
+.logo-text { font-size:22px; font-weight:900; color:#fff; }
+.logo-text span { color:#DC2626; }
+.slide-num { font-size:11px; font-weight:700; letter-spacing:4px; color:rgba(255,255,255,0.2); }
+.dots-row { display:flex; gap:6px; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.12); }
+.dot.active { background:#DC2626; width:20px; border-radius:3px; }
+
+/* ─── SLIDE 1 — COVER ─── */
+#b1 .glow { position:absolute; top:-150px; right:-150px; width:700px; height:700px; background:radial-gradient(circle, rgba(220,38,38,0.18) 0%, transparent 60%); }
+#b1 .glow2 { position:absolute; bottom:-200px; left:-100px; width:600px; height:600px; background:radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 65%); }
+#b1 .content { position:relative; z-index:10; padding:100px 80px 120px; height:100%; display:flex; flex-direction:column; justify-content:flex-end; }
+#b1 .tag { font-size:11px; font-weight:700; letter-spacing:8px; color:#DC2626; text-transform:uppercase; margin-bottom:48px; }
+#b1 .title { font-size:104px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-3px; color:#fff; margin-bottom:24px; }
+#b1 .title .red { color:#DC2626; }
+#b1 .sub-line { font-size:20px; font-weight:400; color:rgba(255,255,255,0.35); letter-spacing:3px; text-transform:uppercase; }
+/* Decorative ruler */
+#b1 .ruler {
+  position:absolute; top:100px; right:80px;
+  width:2px; height:500px;
+  background:linear-gradient(to bottom, transparent, rgba(220,38,38,0.6) 30%, rgba(220,38,38,0.6) 70%, transparent);
+}
+#b1 .ruler::before {
+  content:''; position:absolute; top:0; left:-8px; right:-8px;
+  border-top:1px solid rgba(220,38,38,0.4);
+}
+#b1 .ruler::after {
+  content:''; position:absolute; bottom:0; left:-8px; right:-8px;
+  border-bottom:1px solid rgba(220,38,38,0.4);
+}
+/* Angle decoration */
+#b1 .angle-deco {
+  position:absolute; top:140px; right:110px;
+  display:flex; flex-direction:column; gap:16px; align-items:center;
+}
+#b1 .angle-badge {
+  width:70px; height:70px; border-radius:50%;
+  border:2px solid rgba(220,38,38,0.4);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+#b1 .angle-badge .deg { font-size:20px; font-weight:900; color:#DC2626; }
+#b1 .angle-badge .jt { font-size:9px; color:rgba(255,255,255,0.3); letter-spacing:2px; }
+
+/* ─── SLIDE 2 — ÁNGULOS ─── */
+#b2 .content { position:relative; z-index:10; padding:80px; height:100%; display:flex; flex-direction:column; justify-content:center; }
+#b2 .section-title { font-size:14px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:48px; }
+#b2 .big-headline { font-size:72px; font-weight:900; line-height:0.9; text-transform:uppercase; letter-spacing:-2px; color:#fff; margin-bottom:48px; }
+#b2 .big-headline span { color:#DC2626; }
+/* Angle cards */
+#b2 .angle-cards { display:flex; flex-direction:column; gap:24px; }
+#b2 .angle-card {
+  display:flex; align-items:center; gap:32px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px; padding:28px 32px;
+  border-left:3px solid;
+}
+#b2 .angle-card.primary { border-left-color:#DC2626; }
+#b2 .angle-card.secondary { border-left-color:rgba(255,255,255,0.3); }
+#b2 .angle-card.tertiary { border-left-color:rgba(124,58,237,0.5); }
+#b2 .angle-num { font-size:64px; font-weight:900; letter-spacing:-2px; min-width:140px; }
+#b2 .angle-card.primary .angle-num { color:#DC2626; }
+#b2 .angle-card.secondary .angle-num { color:#fff; }
+#b2 .angle-card.tertiary .angle-num { color:rgba(124,58,237,0.8); }
+#b2 .angle-info .joint { font-size:22px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; }
+#b2 .angle-info .desc { font-size:15px; color:rgba(255,255,255,0.4); margin-top:4px; font-weight:400; }
+#b2 .angle-info .tip { font-size:13px; color:rgba(220,38,38,0.7); margin-top:8px; font-weight:600; letter-spacing:1px; }
+#b2 .note-box {
+  margin-top:32px; padding:24px 28px;
+  background:rgba(220,38,38,0.06); border:1px solid rgba(220,38,38,0.15);
+  border-radius:12px;
+}
+#b2 .note-box p { font-size:17px; color:rgba(255,255,255,0.5); line-height:1.6; }
+#b2 .note-box strong { color:#fff; }
+
+/* ─── SLIDE 3 — MÚSCULOS ─── */
+#b3 .content { position:relative; z-index:10; padding:80px; height:100%; display:flex; flex-direction:column; justify-content:center; }
+#b3 .section-title { font-size:14px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:48px; }
+#b3 .big-headline { font-size:72px; font-weight:900; line-height:0.9; text-transform:uppercase; letter-spacing:-2px; color:#fff; margin-bottom:48px; }
+#b3 .muscles { display:flex; flex-direction:column; gap:16px; }
+#b3 .muscle-row { display:flex; align-items:center; gap:20px; }
+#b3 .muscle-bar-wrap { flex:1; height:12px; background:rgba(255,255,255,0.05); border-radius:6px; overflow:hidden; }
+#b3 .muscle-bar { height:100%; border-radius:6px; }
+#b3 .bar-primary { background:linear-gradient(90deg,#DC2626,#ef4444); }
+#b3 .bar-secondary { background:linear-gradient(90deg,rgba(220,38,38,0.5),rgba(239,68,68,0.5)); }
+#b3 .bar-tertiary { background:linear-gradient(90deg,rgba(124,58,237,0.6),rgba(124,58,237,0.4)); }
+#b3 .bar-support { background:rgba(255,255,255,0.15); }
+#b3 .muscle-label { font-size:18px; font-weight:700; color:#fff; text-transform:uppercase; min-width:260px; }
+#b3 .muscle-pct { font-size:16px; font-weight:800; min-width:52px; text-align:right; }
+#b3 .pct-primary { color:#DC2626; }
+#b3 .pct-secondary { color:rgba(220,38,38,0.6); }
+#b3 .pct-tertiary { color:rgba(124,58,237,0.8); }
+#b3 .pct-support { color:rgba(255,255,255,0.3); }
+#b3 .muscle-tag { font-size:10px; font-weight:700; letter-spacing:3px; color:rgba(255,255,255,0.25); min-width:90px; text-transform:uppercase; text-align:right; }
+#b3 .legend { margin-top:40px; display:flex; gap:28px; flex-wrap:wrap; }
+#b3 .legend-item { display:flex; align-items:center; gap:10px; }
+#b3 .legend-dot { width:10px; height:10px; border-radius:50%; }
+#b3 .legend-text { font-size:13px; color:rgba(255,255,255,0.4); font-weight:500; }
+
+/* ─── SLIDE 4 — ERRORES ─── */
+#b4 .content { position:relative; z-index:10; padding:80px; height:100%; display:flex; flex-direction:column; justify-content:center; }
+#b4 .section-title { font-size:14px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:48px; }
+#b4 .big-headline { font-size:72px; font-weight:900; line-height:0.9; text-transform:uppercase; letter-spacing:-2px; color:#fff; margin-bottom:48px; }
+#b4 .errors { display:flex; flex-direction:column; gap:20px; }
+#b4 .error-card {
+  display:flex; align-items:flex-start; gap:24px;
+  padding:28px 28px;
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px; border-left:4px solid #DC2626;
+}
+#b4 .error-num {
+  font-size:48px; font-weight:900; color:rgba(220,38,38,0.2);
+  min-width:52px; line-height:1;
+}
+#b4 .error-body .error-title { font-size:24px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:0.5px; }
+#b4 .error-body .error-desc { font-size:15px; color:rgba(255,255,255,0.4); margin-top:6px; }
+#b4 .error-body .error-risk {
+  display:inline-block; margin-top:10px;
+  background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.2);
+  color:#DC2626; font-size:11px; font-weight:700; letter-spacing:2px;
+  padding:4px 12px; border-radius:100px; text-transform:uppercase;
+}
+
+/* ─── SLIDE 5 — PROGRESIÓN ─── */
+#b5 .content { position:relative; z-index:10; padding:80px; height:100%; display:flex; flex-direction:column; justify-content:center; }
+#b5 .section-title { font-size:14px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:48px; }
+#b5 .big-headline { font-size:72px; font-weight:900; line-height:0.9; text-transform:uppercase; letter-spacing:-2px; color:#fff; margin-bottom:48px; }
+#b5 .steps { display:flex; flex-direction:column; gap:0; }
+#b5 .step {
+  display:flex; align-items:center; gap:32px;
+  padding:28px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+  position:relative;
+}
+#b5 .step:last-child { border-bottom:none; }
+#b5 .step-num {
+  width:72px; height:72px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; font-weight:900; flex-shrink:0;
+}
+#b5 .num-1 { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.3); border:2px solid rgba(255,255,255,0.08); }
+#b5 .num-2 { background:rgba(220,38,38,0.08); color:rgba(220,38,38,0.5); border:2px solid rgba(220,38,38,0.2); }
+#b5 .num-3 { background:rgba(220,38,38,0.15); color:rgba(220,38,38,0.8); border:2px solid rgba(220,38,38,0.4); }
+#b5 .num-4 { background:#DC2626; color:#fff; border:2px solid #DC2626; box-shadow:0 0 30px rgba(220,38,38,0.4); }
+#b5 .step-info .step-name { font-size:26px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:0.5px; }
+#b5 .step-info .step-sub { font-size:14px; color:rgba(255,255,255,0.35); margin-top:4px; }
+#b5 .step-info .step-level { font-size:11px; font-weight:700; letter-spacing:3px; margin-top:8px; text-transform:uppercase; }
+#b5 .lv-1 { color:rgba(255,255,255,0.25); }
+#b5 .lv-2 { color:rgba(220,38,38,0.4); }
+#b5 .lv-3 { color:rgba(220,38,38,0.7); }
+#b5 .lv-4 { color:#DC2626; }
+
+/* ─── SLIDE 6 — CTA ─── */
+#b6 { background:#0a0a0a; }
+#b6 .red-block {
+  position:absolute; left:0; top:0; bottom:0; width:10px;
+  background:#DC2626;
+}
+#b6 .glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:800px; height:800px; background:radial-gradient(circle, rgba(220,38,38,0.12) 0%, transparent 60%); }
+#b6 .content { position:relative; z-index:10; padding:80px 100px; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
+#b6 .pre-text { font-size:18px; font-weight:400; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:32px; }
+#b6 .cta-headline { font-size:100px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-3px; color:#fff; margin-bottom:60px; }
+#b6 .cta-headline .red { color:#DC2626; }
+#b6 .feature-list { display:flex; flex-direction:column; gap:16px; margin-bottom:64px; }
+#b6 .feat { display:flex; align-items:center; gap:16px; }
+#b6 .feat-dot { width:8px; height:8px; border-radius:50%; background:#DC2626; flex-shrink:0; }
+#b6 .feat-text { font-size:20px; color:rgba(255,255,255,0.6); font-weight:500; }
+#b6 .url-line { font-size:60px; font-weight:900; color:#fff; letter-spacing:-2px; }
+#b6 .url-line span { color:#DC2626; }
+#b6 .url-sub { font-size:16px; color:rgba(255,255,255,0.3); margin-top:12px; letter-spacing:2px; }
+</style>
+</head>
+<body>
+
+<div class="page-title">Carrusel 02 — Biomecánica: Sentadilla Perfecta (6 slides)</div>
+<button class="dl-all" onclick="downloadAll()">⬇  Descargar todos los slides (6 PNGs)</button>
+
+<!-- ═══ SLIDE 1 — COVER ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 1 / 6 — Portada</div>
+  <div class="canvas" id="b1">
+    <div class="grid-tex"></div>
+    <div class="top-accent"></div>
+    <div class="glow"></div><div class="glow2"></div>
+    <div class="ruler"></div>
+    <div class="angle-deco">
+      <div class="angle-badge"><div class="deg">90°</div><div class="jt">RODILLA</div></div>
+      <div style="width:2px;height:40px;background:rgba(220,38,38,0.3);margin:0 auto;"></div>
+      <div class="angle-badge"><div class="deg">≤90°</div><div class="jt">CADERA</div></div>
+      <div style="width:2px;height:40px;background:rgba(220,38,38,0.3);margin:0 auto;"></div>
+      <div class="angle-badge" style="border-color:rgba(255,255,255,0.15);"><div class="deg" style="color:rgba(255,255,255,0.4);font-size:14px;">NEUTRAL</div><div class="jt">COLUMNA</div></div>
+    </div>
+    <div class="content">
+      <div class="tag">Educación · Biomecánica</div>
+      <div class="title">SENTADILLA<br><span class="red">PERFECTA</span></div>
+      <div class="sub-line">La ciencia detrás del movimiento</div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-text">RIVAL<span>FIT</span></div>
+      <div class="dots-row">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-num">01 / 06</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('b1','rival-biomecanica-squat-01.png')">⬇ Descargar Slide 1</button>
+</div>
+
+<!-- ═══ SLIDE 2 — ÁNGULOS ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 2 / 6 — Ángulos articulares</div>
+  <div class="canvas" id="b2">
+    <div class="grid-tex"></div>
+    <div class="top-accent"></div>
+    <div style="position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(220,38,38,0.1) 0%,transparent 60%);"></div>
+    <div class="content">
+      <div class="section-title">Biomecánica · Ángulos</div>
+      <div class="big-headline">LOS<br>ÁNGULOS<br><span>CORRECTOS</span></div>
+      <div class="angle-cards">
+        <div class="angle-card primary">
+          <div class="angle-num">90°</div>
+          <div class="angle-info">
+            <div class="joint">Rodilla</div>
+            <div class="desc">Flexión máxima recomendada en posición paralela</div>
+            <div class="tip">→ No superar el pie más de 5 cm hacia adelante</div>
+          </div>
+        </div>
+        <div class="angle-card secondary">
+          <div class="angle-num">≤90°</div>
+          <div class="angle-info">
+            <div class="joint">Cadera</div>
+            <div class="desc">Igual o por debajo de la línea de rodillas para squat completo</div>
+            <div class="tip" style="color:rgba(255,255,255,0.5)">→ Mayor activación de glúteo y menos carga lumbar</div>
+          </div>
+        </div>
+        <div class="angle-card tertiary">
+          <div class="angle-num" style="font-size:42px;">NEUTRAL</div>
+          <div class="angle-info">
+            <div class="joint">Columna vertebral</div>
+            <div class="desc">Curva lumbar mantenida — ni excesiva ni invertida</div>
+            <div class="tip" style="color:rgba(124,58,237,0.8)">→ Core activado antes de iniciar el descenso</div>
+          </div>
+        </div>
+      </div>
+      <div class="note-box">
+        <p>El talón <strong>siempre en contacto</strong> con el suelo. Si se levanta, problema de movilidad de tobillo o femur largo.</p>
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-text">RIVAL<span>FIT</span></div>
+      <div class="slide-num">02 / 06</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('b2','rival-biomecanica-squat-02.png')">⬇ Descargar Slide 2</button>
+</div>
+
+<!-- ═══ SLIDE 3 — MÚSCULOS ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 3 / 6 — Músculos activados</div>
+  <div class="canvas" id="b3">
+    <div class="grid-tex"></div>
+    <div class="top-accent"></div>
+    <div class="content">
+      <div class="section-title">Biomecánica · Activación muscular</div>
+      <div class="big-headline">MÚSCULOS<br>EN <span style="color:#DC2626">ACCIÓN</span></div>
+      <div class="muscles">
+        <div class="muscle-row">
+          <div class="muscle-label">Cuádriceps</div>
+          <div class="muscle-bar-wrap"><div class="muscle-bar bar-primary" style="width:88%;"></div></div>
+          <div class="muscle-pct pct-primary">88%</div>
+          <div class="muscle-tag">PRIMARIO</div>
+        </div>
+        <div class="muscle-row">
+          <div class="muscle-label">Glúteo Mayor</div>
+          <div class="muscle-bar-wrap"><div class="muscle-bar bar-primary" style="width:82%;"></div></div>
+          <div class="muscle-pct pct-primary">82%</div>
+          <div class="muscle-tag">PRIMARIO</div>
+        </div>
+        <div class="muscle-row">
+          <div class="muscle-label">Isquiotibiales</div>
+          <div class="muscle-bar-wrap"><div class="muscle-bar bar-secondary" style="width:58%;"></div></div>
+          <div class="muscle-pct pct-secondary">58%</div>
+          <div class="muscle-tag">SECUNDARIO</div>
+        </div>
+        <div class="muscle-row">
+          <div class="muscle-label">Gemelos</div>
+          <div class="muscle-bar-wrap"><div class="muscle-bar bar-secondary" style="width:42%;"></div></div>
+          <div class="muscle-pct pct-secondary">42%</div>
+          <div class="muscle-tag">SECUNDARIO</div>
+        </div>
+        <div class="muscle-row">
+          <div class="muscle-label">Transverso Abd.</div>
+          <div class="muscle-bar-wrap"><div class="muscle-bar bar-tertiary" style="width:70%;"></div></div>
+          <div class="muscle-pct pct-tertiary">70%</div>
+          <div class="muscle-tag">CORE</div>
+        </div>
+        <div class="muscle-row">
+          <div class="muscle-label">Erector Espinal</div>
+          <div class="muscle-bar-wrap"><div class="muscle-bar bar-support" style="width:35%;"></div></div>
+          <div class="muscle-pct pct-support">35%</div>
+          <div class="muscle-tag">SOPORTE</div>
+        </div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#DC2626;"></div><div class="legend-text">Primario</div></div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(220,38,38,0.5);"></div><div class="legend-text">Secundario</div></div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(124,58,237,0.7);"></div><div class="legend-text">Core estabilizador</div></div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.2);"></div><div class="legend-text">Soporte</div></div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-text">RIVAL<span>FIT</span></div>
+      <div class="slide-num">03 / 06</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('b3','rival-biomecanica-squat-03.png')">⬇ Descargar Slide 3</button>
+</div>
+
+<!-- ═══ SLIDE 4 — ERRORES ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 4 / 6 — Errores comunes</div>
+  <div class="canvas" id="b4">
+    <div class="grid-tex"></div>
+    <div class="top-accent"></div>
+    <div style="position:absolute;bottom:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(220,38,38,0.08) 0%,transparent 60%);"></div>
+    <div class="content">
+      <div class="section-title">Biomecánica · Errores</div>
+      <div class="big-headline">LOS<br>ERRORES<br><span style="color:#DC2626">MÁS CAROS</span></div>
+      <div class="errors">
+        <div class="error-card">
+          <div class="error-num">01</div>
+          <div class="error-body">
+            <div class="error-title">Rodillas hacia adentro (Valgo)</div>
+            <div class="error-desc">Las rodillas colapsan al interior durante el descenso o ascenso</div>
+            <div class="error-risk">Riesgo: Lesión de Ligamento Cruzado</div>
+          </div>
+        </div>
+        <div class="error-card">
+          <div class="error-num">02</div>
+          <div class="error-body">
+            <div class="error-title">Talones elevados del suelo</div>
+            <div class="error-desc">Indica falta de movilidad en tobillo o tensión en el sóleo</div>
+            <div class="error-risk">Riesgo: Sobrecarga de rodilla</div>
+          </div>
+        </div>
+        <div class="error-card">
+          <div class="error-num">03</div>
+          <div class="error-body">
+            <div class="error-title">Redondeo de la zona lumbar</div>
+            <div class="error-desc">La pelvis realiza retroversión, perdiendo la curva lumbar natural</div>
+            <div class="error-risk">Riesgo: Hernia Discal Lumbar</div>
+          </div>
+        </div>
+        <div class="error-card">
+          <div class="error-num">04</div>
+          <div class="error-body">
+            <div class="error-title">Bajada demasiado rápida</div>
+            <div class="error-desc">El control excéntrico es clave — bajar en 3 seg mínimo</div>
+            <div class="error-risk">Riesgo: Pérdida de tensión y control</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-text">RIVAL<span>FIT</span></div>
+      <div class="slide-num">04 / 06</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('b4','rival-biomecanica-squat-04.png')">⬇ Descargar Slide 4</button>
+</div>
+
+<!-- ═══ SLIDE 5 — PROGRESIÓN ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 5 / 6 — Progresión</div>
+  <div class="canvas" id="b5">
+    <div class="grid-tex"></div>
+    <div class="top-accent"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(220,38,38,0.06) 0%,transparent 60%);"></div>
+    <div class="content">
+      <div class="section-title">Biomecánica · Progresión</div>
+      <div class="big-headline">TU<br>CAMINO<br><span style="color:#DC2626">AL SQUAT</span></div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num num-1">①</div>
+          <div class="step-info">
+            <div class="step-name">Goblet Squat</div>
+            <div class="step-sub">Kettlebell al pecho. Aprende el patrón de movimiento sin carga en espalda.</div>
+            <div class="step-level lv-1">Principiante</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num num-2">②</div>
+          <div class="step-info">
+            <div class="step-name">Back Squat con Barra</div>
+            <div class="step-sub">Posición alta o baja. Carga progresiva controlada. Técnica prioritaria.</div>
+            <div class="step-level lv-2">Intermedio</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num num-3">③</div>
+          <div class="step-info">
+            <div class="step-name">Front Squat</div>
+            <div class="step-sub">Barra en hombros. Más demanda de core y movilidad. Espalda más vertical.</div>
+            <div class="step-level lv-3">Avanzado</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num num-4">④</div>
+          <div class="step-info">
+            <div class="step-name">Pistol Squat</div>
+            <div class="step-sub">Sentadilla unilateral. Máxima demanda de fuerza, equilibrio y movilidad.</div>
+            <div class="step-level lv-4">Élite</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-text">RIVAL<span>FIT</span></div>
+      <div class="slide-num">05 / 06</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('b5','rival-biomecanica-squat-05.png')">⬇ Descargar Slide 5</button>
+</div>
+
+<!-- ═══ SLIDE 6 — CTA ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 6 / 6 — CTA</div>
+  <div class="canvas" id="b6">
+    <div class="grid-tex"></div>
+    <div class="top-accent"></div>
+    <div class="red-block"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="pre-text">¿Quieres programación basada en ciencia real?</div>
+      <div class="cta-headline">ENTRENA<br>CON<br><span class="red">COACHES</span><br>REALES.</div>
+      <div class="feature-list">
+        <div class="feat"><div class="feat-dot"></div><div class="feat-text">Programas personalizados por coaches certificados</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-text">Seguimiento de progreso y marcas personales</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-text">Comunidad de atletas que se exigen y se apoyan</div></div>
+      </div>
+      <div class="url-line">rival<span>fit</span>.app</div>
+      <div class="url-sub">Gratis · Sin tarjeta · Siempre</div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-text">RIVAL<span>FIT</span></div>
+      <div class="slide-num">06 / 06</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('b6','rival-biomecanica-squat-06.png')">⬇ Descargar Slide 6</button>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+async function downloadSlide(id, filename) {
+  const el = document.getElementById(id);
+  const btn = el.nextElementSibling;
+  btn.textContent = 'Generando...'; btn.disabled = true;
+  const c = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+  const a = document.createElement('a');
+  a.download = filename; a.href = c.toDataURL('image/png',1.0); a.click();
+  btn.textContent = '✓ Descargado'; btn.disabled = false;
+}
+async function downloadAll() {
+  const btn = document.querySelector('.dl-all');
+  btn.textContent = 'Generando todos...'; btn.disabled = true;
+  const slides = [
+    {id:'b1',name:'rival-biomecanica-squat-01.png'},
+    {id:'b2',name:'rival-biomecanica-squat-02.png'},
+    {id:'b3',name:'rival-biomecanica-squat-03.png'},
+    {id:'b4',name:'rival-biomecanica-squat-04.png'},
+    {id:'b5',name:'rival-biomecanica-squat-05.png'},
+    {id:'b6',name:'rival-biomecanica-squat-06.png'},
+  ];
+  for (const s of slides) {
+    const el = document.getElementById(s.id);
+    const c = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+    const a = document.createElement('a'); a.download = s.name; a.href = c.toDataURL('image/png',1.0); a.click();
+    await new Promise(r => setTimeout(r, 900));
+  }
+  btn.textContent = '✓ Todos descargados'; btn.disabled = false;
+  setTimeout(() => { btn.textContent = '⬇  Descargar todos los slides (6 PNGs)'; }, 3000);
+}
+</script>
+</body>
+</html>

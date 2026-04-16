@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RivalFit — Carrusel 06 Bíceps Completo</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; display:flex; flex-direction:column; align-items:center; padding:24px; gap:16px; font-family:'Outfit',sans-serif; }
+
+.page-title { color:#DC2626; font-size:13px; font-weight:700; letter-spacing:4px; text-transform:uppercase; }
+.dl-all { background:#DC2626; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer; letter-spacing:1px; }
+.dl-all:hover { background:#b91c1c; }
+.dl-all:disabled { background:#444; cursor:wait; }
+.slide-wrapper { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.slide-label { color:#555; font-size:11px; letter-spacing:3px; text-transform:uppercase; }
+.dl-btn { background:#1e1e1e; color:#aaa; border:1px solid #333; padding:8px 20px; border-radius:6px; font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; cursor:pointer; }
+.dl-btn:hover { border-color:#DC2626; color:#DC2626; }
+
+/* ─── CANVAS BASE ─── */
+.canvas { width:1080px; height:1350px; background:#0a0a0a; position:relative; overflow:hidden; flex-shrink:0; }
+
+/* Noise */
+.noise { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px); background-size:28px 28px; z-index:1; pointer-events:none; }
+.diagonal { position:absolute; inset:0; background:repeating-linear-gradient(-55deg, transparent, transparent 80px, rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px); z-index:1; pointer-events:none; }
+
+/* ─── SHARED ELEMENTS ─── */
+.top-bar { position:absolute; top:0; left:0; right:0; height:5px; background:#DC2626; z-index:20; }
+.bottom-bar { position:absolute; bottom:0; left:0; right:0; height:5px; background:#DC2626; z-index:20; }
+.logo-area { position:absolute; bottom:22px; left:70px; right:70px; display:flex; align-items:center; justify-content:space-between; z-index:20; }
+.logo { font-size:24px; font-weight:900; color:#fff; letter-spacing:-1px; }
+.logo span { color:#DC2626; }
+.slide-counter { font-size:11px; font-weight:700; letter-spacing:4px; color:rgba(255,255,255,0.25); text-transform:uppercase; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.12); }
+.dot.active { background:#DC2626; width:22px; border-radius:3px; }
+.eyebrow { font-size:12px; font-weight:700; letter-spacing:8px; color:rgba(220,38,38,0.75); text-transform:uppercase; }
+.tag-pill { display:inline-block; background:#DC2626; color:#fff; font-size:11px; font-weight:700; letter-spacing:5px; text-transform:uppercase; padding:7px 20px; }
+
+/* ─── SLIDE 1 — COVER ─── */
+#s1 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.35; }
+#s1 .glow { position:absolute; bottom:-150px; right:-150px; width:800px; height:800px; background:radial-gradient(circle, rgba(220,38,38,0.28) 0%, transparent 60%); z-index:2; }
+#s1 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; height:100%; padding:0 70px; }
+#s1 .eyebrow { margin-bottom:48px; }
+#s1 .headline { font-size:160px; font-weight:900; line-height:0.88; color:#fff; text-transform:uppercase; letter-spacing:-6px; white-space:nowrap; }
+#s1 .headline .red { color:#DC2626; }
+#s1 .rule { width:80px; height:4px; background:#DC2626; margin:40px 0; }
+#s1 .sub { font-size:20px; font-weight:400; color:rgba(255,255,255,0.4); letter-spacing:2px; line-height:1.8; }
+
+/* ─── SLIDE 2 — ANATOMÍA ─── */
+#s2 .hero-img { position:absolute; right:0; top:0; bottom:0; width:45%; object-fit:cover; z-index:0; opacity:0.4; }
+#s2 .fade-left { position:absolute; top:0; bottom:0; left:0; width:60%; background:linear-gradient(to right, #0a0a0a 60%, transparent); z-index:2; }
+#s2 .glow { position:absolute; bottom:-100px; left:-100px; width:600px; height:600px; background:radial-gradient(circle, rgba(220,38,38,0.15) 0%, transparent 65%); z-index:2; }
+#s2 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; height:100%; padding:0 70px; }
+#s2 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:16px; }
+#s2 .title { font-size:80px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:50px; white-space:nowrap; }
+#s2 .title span { color:#DC2626; }
+#s2 .muscle-list { display:flex; flex-direction:column; gap:18px; }
+#s2 .muscle-item { display:flex; align-items:flex-start; gap:20px; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.06); }
+#s2 .m-num { font-size:13px; font-weight:700; color:#DC2626; min-width:28px; margin-top:3px; letter-spacing:1px; }
+#s2 .m-name { font-size:20px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; line-height:1.1; margin-bottom:6px; }
+#s2 .m-desc { font-size:15px; font-weight:400; color:rgba(255,255,255,0.38); line-height:1.5; }
+#s2 .m-tag { display:inline-block; margin-top:8px; background:rgba(220,38,38,0.15); color:#DC2626; font-size:10px; font-weight:700; letter-spacing:3px; padding:4px 10px; text-transform:uppercase; }
+
+/* ─── SLIDE 3 — BIOMECÁNICA ─── */
+#s3 { background:#0a0a0a; }
+#s3 .hero-img { position:absolute; top:0; left:0; right:0; height:45%; object-fit:cover; z-index:0; opacity:0.3; }
+#s3 .fade-down { position:absolute; top:0; left:0; right:0; height:55%; background:linear-gradient(to bottom, transparent 30%, #0a0a0a 100%); z-index:2; }
+#s3 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:flex-end; height:100%; padding:0 70px 80px; }
+#s3 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s3 .title { font-size:80px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:40px; white-space:nowrap; }
+#s3 .title span { color:#DC2626; }
+#s3 .bio-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+#s3 .bio-card { background:rgba(255,255,255,0.04); border-left:3px solid #DC2626; padding:22px; }
+#s3 .b-num { font-size:36px; font-weight:900; color:rgba(220,38,38,0.3); line-height:1; margin-bottom:6px; }
+#s3 .b-title { font-size:17px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+#s3 .b-text { font-size:14px; color:rgba(255,255,255,0.38); line-height:1.55; }
+
+/* ─── SLIDE 4 — ERRORES ─── */
+#s4 .glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:700px; background:radial-gradient(circle, rgba(220,38,38,0.08) 0%, transparent 70%); z-index:1; }
+#s4 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; height:100%; padding:0 70px; }
+#s4 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s4 .title { font-size:80px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:48px; white-space:nowrap; }
+#s4 .title span { color:#DC2626; }
+#s4 .error-list { display:flex; flex-direction:column; gap:20px; }
+#s4 .err-item { display:flex; gap:24px; align-items:flex-start; background:rgba(220,38,38,0.05); border:1px solid rgba(220,38,38,0.15); padding:24px; }
+#s4 .e-x { font-size:28px; font-weight:900; color:#DC2626; line-height:1; min-width:36px; }
+#s4 .e-title { font-size:20px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+#s4 .e-text { font-size:15px; color:rgba(255,255,255,0.38); line-height:1.55; }
+
+/* ─── SLIDE 5 — EJERCICIOS ─── */
+#s5 .hero-img { position:absolute; bottom:0; right:0; width:50%; height:50%; object-fit:cover; z-index:0; opacity:0.2; }
+#s5 .fade { position:absolute; bottom:0; right:0; width:50%; height:50%; background:linear-gradient(135deg, #0a0a0a 40%, transparent); z-index:2; }
+#s5 .content { position:relative; z-index:10; display:flex; flex-direction:column; height:100%; padding:60px 70px 80px; }
+#s5 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s5 .title { font-size:80px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:40px; white-space:nowrap; }
+#s5 .title span { color:#DC2626; }
+#s5 .ex-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; flex:1; }
+#s5 .ex-card { background:rgba(255,255,255,0.04); border-bottom:3px solid #DC2626; padding:28px; display:flex; flex-direction:column; }
+#s5 .ex-num { font-size:48px; font-weight:900; color:rgba(220,38,38,0.25); line-height:1; margin-bottom:8px; }
+#s5 .ex-name { font-size:21px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; white-space:nowrap; }
+#s5 .ex-sets { font-size:13px; font-weight:700; color:#DC2626; letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; }
+#s5 .ex-tip { font-size:14px; color:rgba(255,255,255,0.35); line-height:1.5; }
+
+/* ─── SLIDE 6 — TIPS ─── */
+#s6 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.15; }
+#s6 .overlay { position:absolute; inset:0; background:linear-gradient(160deg, #0a0a0a 50%, rgba(10,10,10,0.85) 100%); z-index:1; }
+#s6 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; height:100%; padding:0 70px; }
+#s6 .section-label { font-size:11px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#s6 .title { font-size:80px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-2px; line-height:0.9; margin-bottom:50px; white-space:nowrap; }
+#s6 .title span { color:#DC2626; }
+#s6 .tips-list { display:flex; flex-direction:column; gap:24px; }
+#s6 .tip-item { display:flex; gap:28px; align-items:flex-start; }
+#s6 .t-num { font-size:72px; font-weight:900; color:rgba(220,38,38,0.2); line-height:0.85; min-width:70px; }
+#s6 .t-title { font-size:22px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+#s6 .t-text { font-size:16px; color:rgba(255,255,255,0.38); line-height:1.6; }
+
+/* ─── SLIDE 7 — CTA ─── */
+#s7 { background:#000; }
+#s7 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.2; }
+#s7 .glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:900px; height:900px; background:radial-gradient(circle, rgba(220,38,38,0.22) 0%, transparent 60%); z-index:2; }
+#s7 .content { position:relative; z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; padding:0 70px; }
+#s7 .pre { font-size:14px; font-weight:700; letter-spacing:7px; color:rgba(220,38,38,0.8); text-transform:uppercase; margin-bottom:50px; }
+#s7 .headline { font-size:110px; font-weight:900; line-height:0.88; color:#fff; text-transform:uppercase; letter-spacing:-4px; margin-bottom:50px; }
+#s7 .headline .red { color:#DC2626; }
+#s7 .headline .dim { color:rgba(255,255,255,0.15); }
+#s7 .url-box { border:2px solid rgba(220,38,38,0.5); padding:20px 60px; margin-bottom:24px; }
+#s7 .url-label { font-size:12px; font-weight:700; letter-spacing:5px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:8px; }
+#s7 .url { font-size:30px; font-weight:900; color:#DC2626; letter-spacing:2px; }
+#s7 .tagline { font-size:16px; font-weight:400; color:rgba(255,255,255,0.2); letter-spacing:3px; font-style:italic; }
+</style>
+</head>
+<body>
+
+<div class="page-title">Carrusel 06 — Bíceps Completo · Anatomía · Biomecánica · Ejercicios</div>
+<button class="dl-all" onclick="downloadAll()">⬇ Descargar todos los slides (7 PNGs)</button>
+
+<!-- ════════════════════ SLIDE 1 — COVER ════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 1 / 7 — Portada</div>
+  <div class="canvas" id="s1">
+    <img class="hero-img" src="./images/biceps-hero.png" crossorigin="anonymous">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="diagonal"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="eyebrow">Anatomía & Entrenamiento · 06</div>
+      <div class="headline">BÍCEPS<span class="red">.</span></div>
+      <div class="rule"></div>
+      <div class="sub">
+        Anatomía · Biomecánica<br>
+        Errores · Ejercicios · Tips PRO<br>
+        <span style="color:rgba(220,38,38,0.6)">Desliza y domina el músculo →</span>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">01 / 07</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s1','rival-biceps-01-portada.png')">⬇ Descargar Slide 1</button>
+</div>
+
+<!-- ════════════════════ SLIDE 2 — ANATOMÍA ════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 2 / 7 — Anatomía</div>
+  <div class="canvas" id="s2">
+    <img class="hero-img" src="./images/biceps-anatomy.png" crossorigin="anonymous">
+    <div class="fade-left"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="section-label">02 · Anatomía</div>
+      <div class="title">LOS <span>MÚSCULOS</span></div>
+      <div class="muscle-list">
+        <div class="muscle-item">
+          <div class="m-num">01</div>
+          <div>
+            <div class="m-name">Bíceps Braquial</div>
+            <div class="m-desc">Biarticular con dos cabezas. La larga estabiliza el hombro; la corta genera más fuerza de flexión.</div>
+            <div class="m-tag">Protagonista</div>
+          </div>
+        </div>
+        <div class="muscle-item">
+          <div class="m-num">02</div>
+          <div>
+            <div class="m-name">Braquial</div>
+            <div class="m-desc">El flexor más potente del codo. Activo en cualquier agarre — pronación, neutro o supino.</div>
+            <div class="m-tag">El más fuerte</div>
+          </div>
+        </div>
+        <div class="muscle-item">
+          <div class="m-num">03</div>
+          <div>
+            <div class="m-name">Braquiorradial</div>
+            <div class="m-desc">Asiste la flexión en agarre neutro (curl martillo). Clave para el grosor total del brazo.</div>
+            <div class="m-tag">Sinergista</div>
+          </div>
+        </div>
+        <div class="muscle-item" style="border-bottom:none">
+          <div class="m-num">04</div>
+          <div>
+            <div class="m-name">Supinador</div>
+            <div class="m-desc">Trabaja con el bíceps en la rotación del antebrazo. Actívalo girando el meñique hacia arriba al subir.</div>
+            <div class="m-tag">Rotación</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">02 / 07</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s2','rival-biceps-02-anatomia.png')">⬇ Descargar Slide 2</button>
+</div>
+
+<!-- ════════════════════ SLIDE 3 — BIOMECÁNICA ════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 3 / 7 — Biomecánica</div>
+  <div class="canvas" id="s3">
+    <img class="hero-img" src="./images/biceps-curl.png" crossorigin="anonymous">
+    <div class="fade-down"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="content">
+      <div class="section-label">03 · Biomecánica</div>
+      <div class="title">CÓMO <span>FUNCIONA</span></div>
+      <div class="bio-grid">
+        <div class="bio-card">
+          <div class="b-num">01</div>
+          <div class="b-title">Flexión del Codo</div>
+          <div class="b-text">Mayor torque entre 80-100°. Es donde más carga debes sentir en cada rep.</div>
+        </div>
+        <div class="bio-card">
+          <div class="b-num">02</div>
+          <div class="b-title">Supinación</div>
+          <div class="b-text">Girar el meñique arriba activa hasta un 30% más de fibras del bíceps braquial.</div>
+        </div>
+        <div class="bio-card">
+          <div class="b-num">03</div>
+          <div class="b-title">Fase Excéntrica</div>
+          <div class="b-text">Baja en 3-4 segundos. El excéntrico crea más daño muscular y mayor adaptación.</div>
+        </div>
+        <div class="bio-card">
+          <div class="b-num">04</div>
+          <div class="b-title">Rango Completo</div>
+          <div class="b-text">Extiende el codo al bajar. El músculo crece más en el rango estirado.</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">03 / 07</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s3','rival-biceps-03-biomecanica.png')">⬇ Descargar Slide 3</button>
+</div>
+
+<!-- ════════════════════ SLIDE 4 — ERRORES ════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 4 / 7 — Errores</div>
+  <div class="canvas" id="s4">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="diagonal"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="section-label">04 · Errores Comunes</div>
+      <div class="title">LO QUE TE <span>FRENA</span></div>
+      <div class="error-list">
+        <div class="err-item">
+          <div class="e-x">✕</div>
+          <div>
+            <div class="e-title">Usar impulso del torso</div>
+            <div class="e-text">Balancear el cuerpo reduce la tensión en el bíceps hasta un 60%. Codo fijo como un pivote.</div>
+          </div>
+        </div>
+        <div class="err-item">
+          <div class="e-x">✕</div>
+          <div>
+            <div class="e-title">No llegar al rango completo</div>
+            <div class="e-text">Acortar el movimiento elimina el estiramiento — la zona de mayor crecimiento muscular.</div>
+          </div>
+        </div>
+        <div class="err-item">
+          <div class="e-x">✕</div>
+          <div>
+            <div class="e-title">Subir demasiado rápido</div>
+            <div class="e-text">Si subes en menos de 1 segundo, el impulso hace el trabajo. Sube en 2s, baja en 3s.</div>
+          </div>
+        </div>
+        <div class="err-item">
+          <div class="e-x">✕</div>
+          <div>
+            <div class="e-title">Siempre el mismo ejercicio</div>
+            <div class="e-text">Solo barra = solo un ángulo. Necesitas inclinado, predicador y martillo para todas las fibras.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">04 / 07</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s4','rival-biceps-04-errores.png')">⬇ Descargar Slide 4</button>
+</div>
+
+<!-- ════════════════════ SLIDE 5 — EJERCICIOS ════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 5 / 7 — Ejercicios</div>
+  <div class="canvas" id="s5">
+    <img class="hero-img" src="./images/biceps-curl.png" crossorigin="anonymous">
+    <div class="fade"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="content">
+      <div class="section-label">05 · Ejercicios</div>
+      <div class="title">TOP <span>4</span> EJERCICIOS</div>
+      <div class="ex-grid">
+        <div class="ex-card">
+          <div class="ex-num">01</div>
+          <div class="ex-name">Curl Barra</div>
+          <div class="ex-sets">4 × 8-10 reps</div>
+          <div class="ex-tip">Movimiento base de masa. Agarre supino, codos fijos, fuerza desde el bíceps.</div>
+        </div>
+        <div class="ex-card">
+          <div class="ex-num">02</div>
+          <div class="ex-name">Curl Inclinado</div>
+          <div class="ex-sets">3 × 10-12 reps</div>
+          <div class="ex-tip">Máximo estiramiento de la cabeza larga. Banco 45°, extiende completamente.</div>
+        </div>
+        <div class="ex-card">
+          <div class="ex-num">03</div>
+          <div class="ex-name">Curl Predicador</div>
+          <div class="ex-sets">3 × 12 reps</div>
+          <div class="ex-tip">Aísla el bíceps eliminando impulso. Contrae totalmente en el pico.</div>
+        </div>
+        <div class="ex-card">
+          <div class="ex-num">04</div>
+          <div class="ex-name">Curl Martillo</div>
+          <div class="ex-sets">3 × 12-15 reps</div>
+          <div class="ex-tip">Trabaja braquial y braquiorradial. Agarre neutro, grosor total de brazo.</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">05 / 07</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s5','rival-biceps-05-ejercicios.png')">⬇ Descargar Slide 5</button>
+</div>
+
+<!-- ════════════════════ SLIDE 6 — TIPS PRO ════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 6 / 7 — Tips PRO</div>
+  <div class="canvas" id="s6">
+    <img class="hero-img" src="./images/biceps-hero.png" crossorigin="anonymous">
+    <div class="overlay"></div>
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="content">
+      <div class="section-label">06 · Tips Profesionales</div>
+      <div class="title">3 TIPS <span>PRO</span></div>
+      <div class="tips-list">
+        <div class="tip-item">
+          <div class="t-num">01</div>
+          <div>
+            <div class="t-title">Supina al máximo en el pico</div>
+            <div class="t-text">En el punto más alto, gira el meñique hacia arriba. Activación hasta +30% de fibras del bíceps braquial.</div>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="t-num">02</div>
+          <div>
+            <div class="t-title">Frecuencia 2x por semana</div>
+            <div class="t-text">El bíceps se recupera en 48-72h. Dos sesiones semanales producen más crecimiento que una de alto volumen.</div>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="t-num">03</div>
+          <div>
+            <div class="t-title">Progresión de carga constante</div>
+            <div class="t-text">Añade 1-2 kg cada 2-3 semanas. Sin progresión no hay estímulo nuevo y el músculo no crece.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVAL<span>FIT</span></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+      <div class="slide-counter">06 / 07</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s6','rival-biceps-06-tips.png')">⬇ Descargar Slide 6</button>
+</div>
+
+<!-- ════════════════════ SLIDE 7 — CTA ════════════════════ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 7 / 7 — CTA</div>
+  <div class="canvas" id="s7">
+    <img class="hero-img" src="./images/biceps-hero.png" crossorigin="anonymous">
+    <div class="top-bar"></div>
+    <div class="noise"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="pre">Registra cada curl · Trackea tu progreso</div>
+      <div class="headline">
+        SUPERA<br>
+        TU <span class="red">PR</span><span class="dim">.</span>
+      </div>
+      <div class="url-box">
+        <div class="url-label">Únete gratis en</div>
+        <div class="url">rivalfit.app</div>
+      </div>
+      <div class="tagline">Face Yourself. Conquer All.</div>
+    </div>
+    <div class="logo-area">
+      <div class="logo">RIVALFIT</div>
+      <div class="tag-pill">#RivalMindset</div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('s7','rival-biceps-07-cta.png')">⬇ Descargar Slide 7</button>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+async function downloadSlide(id, filename) {
+  const el = document.getElementById(id);
+  const btn = el.nextElementSibling;
+  btn.textContent = 'Generando...'; btn.disabled = true;
+  const c = await html2canvas(el, { scale:2, useCORS:true, allowTaint:true, backgroundColor:null, logging:false });
+  const a = document.createElement('a');
+  a.download = filename; a.href = c.toDataURL('image/png',1.0); a.click();
+  btn.textContent = '✓ Descargado'; btn.disabled = false;
+}
+async function downloadAll() {
+  const btn = document.querySelector('.dl-all');
+  btn.textContent = 'Generando todos...'; btn.disabled = true;
+  const slides = [
+    {id:'s1', name:'rival-biceps-01-portada.png'},
+    {id:'s2', name:'rival-biceps-02-anatomia.png'},
+    {id:'s3', name:'rival-biceps-03-biomecanica.png'},
+    {id:'s4', name:'rival-biceps-04-errores.png'},
+    {id:'s5', name:'rival-biceps-05-ejercicios.png'},
+    {id:'s6', name:'rival-biceps-06-tips.png'},
+    {id:'s7', name:'rival-biceps-07-cta.png'},
+  ];
+  for (const s of slides) {
+    const el = document.getElementById(s.id);
+    const c = await html2canvas(el, { scale:2, useCORS:true, allowTaint:true, backgroundColor:null, logging:false });
+    const a = document.createElement('a');
+    a.download = s.name; a.href = c.toDataURL('image/png',1.0); a.click();
+    await new Promise(r => setTimeout(r, 900));
+  }
+  btn.textContent = '✓ Todos descargados'; btn.disabled = false;
+  setTimeout(() => { btn.textContent = '⬇ Descargar todos los slides (7 PNGs)'; }, 3000);
+}
+</script>
+</body>
+</html>

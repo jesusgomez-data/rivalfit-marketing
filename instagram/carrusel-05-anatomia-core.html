@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RivalFit — Carrusel 05 Anatomía Core</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; display:flex; flex-direction:column; align-items:center; padding:24px; gap:16px; font-family:'Outfit',sans-serif; }
+.page-title { color:#DC2626; font-size:13px; font-weight:700; letter-spacing:4px; text-transform:uppercase; }
+.dl-all { background:#DC2626; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer; }
+.dl-all:hover { background:#b91c1c; }
+.dl-all:disabled { background:#444; cursor:wait; }
+.slide-wrapper { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.slide-label { color:#555; font-size:11px; letter-spacing:3px; text-transform:uppercase; }
+.dl-btn { background:#1e1e1e; color:#aaa; border:1px solid #333; padding:8px 20px; border-radius:6px; font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; cursor:pointer; }
+.dl-btn:hover { border-color:#DC2626; color:#DC2626; }
+
+.canvas { width:1080px; height:1350px; background:#0a0a0a; position:relative; overflow:hidden; flex-shrink:0; font-family:'Outfit',sans-serif; }
+
+/* Shared */
+.noise { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px); background-size:26px 26px; }
+.top-bar { position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#DC2626,#7c3aed,#DC2626); }
+.logo-row { position:absolute; bottom:52px; left:80px; right:80px; display:flex; align-items:center; justify-content:space-between; z-index:20; }
+.logo-t { font-size:22px; font-weight:900; color:#fff; }
+.logo-t span { color:#DC2626; }
+.snum { font-size:11px; font-weight:700; letter-spacing:4px; color:rgba(255,255,255,0.2); }
+
+/* Human body illustration using CSS */
+.body-figure {
+  position:relative; width:200px; margin:0 auto;
+}
+
+/* ─── SLIDE 1 COVER ─── */
+#c1 .glow-r { position:absolute; top:-100px; right:-100px; width:600px; height:600px; background:radial-gradient(circle,rgba(220,38,38,0.15) 0%,transparent 60%); }
+#c1 .glow-l { position:absolute; bottom:-200px; left:-100px; width:500px; height:500px; background:radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 65%); }
+#c1 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:80px; }
+#c1 .eyebrow { font-size:12px; font-weight:700; letter-spacing:8px; color:rgba(220,38,38,0.7); text-transform:uppercase; margin-bottom:48px; }
+#c1 .headline { font-size:132px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-4px; color:#fff; margin-bottom:32px; }
+#c1 .headline .red { color:#DC2626; }
+#c1 .sub { font-size:24px; font-weight:300; color:rgba(255,255,255,0.4); margin-bottom:64px; line-height:1.5; }
+#c1 .sub strong { color:rgba(255,255,255,0.7); font-weight:600; }
+/* Body silhouette with CSS */
+#c1 .torso-area {
+  position:absolute; right:80px; top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; align-items:center;
+}
+/* Core ring visualization */
+#c1 .core-ring {
+  width:220px; height:280px;
+  border:3px solid rgba(220,38,38,0.3);
+  border-radius:50%;
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+#c1 .core-ring::before {
+  content:''; position:absolute;
+  width:160px; height:200px;
+  border:2px dashed rgba(220,38,38,0.15);
+  border-radius:50%;
+}
+#c1 .core-label {
+  font-size:14px; font-weight:700; color:rgba(220,38,38,0.7);
+  letter-spacing:3px; text-align:center; text-transform:uppercase;
+}
+#c1 .muscle-points { position:absolute; inset:0; }
+#c1 .mp {
+  position:absolute; width:10px; height:10px;
+  border-radius:50%; background:#DC2626;
+  box-shadow:0 0 12px rgba(220,38,38,0.6);
+}
+#c1 .mp-label {
+  position:absolute; font-size:10px; font-weight:700;
+  color:rgba(255,255,255,0.5); white-space:nowrap; letter-spacing:1px;
+}
+
+/* ─── SLIDE 2 — INTRO ─── */
+#c2 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:80px; }
+#c2 .headline { font-size:90px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-3px; color:#fff; margin-bottom:48px; }
+#c2 .headline span { color:#DC2626; }
+/* Myth vs reality */
+#c2 .myth-box {
+  background:rgba(255,200,0,0.04); border:1px solid rgba(255,200,0,0.1);
+  border-radius:20px; padding:28px; margin-bottom:24px;
+}
+#c2 .myth-label { font-size:11px; font-weight:700; letter-spacing:3px; color:rgba(255,200,0,0.5); text-transform:uppercase; margin-bottom:12px; }
+#c2 .myth-text { font-size:24px; color:rgba(255,255,255,0.6); font-weight:300; line-height:1.4; }
+#c2 .myth-text s { color:rgba(255,255,255,0.3); }
+#c2 .reality-box {
+  background:rgba(220,38,38,0.06); border:1px solid rgba(220,38,38,0.2);
+  border-radius:20px; padding:28px;
+}
+#c2 .reality-label { font-size:11px; font-weight:700; letter-spacing:3px; color:#DC2626; text-transform:uppercase; margin-bottom:12px; }
+#c2 .reality-text { font-size:24px; color:#fff; font-weight:600; line-height:1.4; }
+#c2 .big-stat { font-size:36px; font-weight:900; color:#DC2626; margin-top:40px; }
+#c2 .big-stat-label { font-size:16px; color:rgba(255,255,255,0.4); margin-top:4px; }
+
+/* ─── SLIDE 3 — MÚSCULO POR MÚSCULO ─── */
+#c3 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:80px; }
+#c3 .section-tag { font-size:12px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:40px; }
+#c3 .muscle-cards { display:flex; flex-direction:column; gap:20px; }
+#c3 .mc {
+  display:flex; align-items:flex-start; gap:24px;
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px; padding:24px; border-left:4px solid;
+}
+#c3 .mc-1 { border-left-color:#DC2626; }
+#c3 .mc-2 { border-left-color:rgba(220,38,38,0.5); }
+#c3 .mc-3 { border-left-color:rgba(124,58,237,0.6); }
+#c3 .mc-4 { border-left-color:rgba(255,255,255,0.15); }
+#c3 .mc-num { font-size:42px; font-weight:900; min-width:52px; line-height:1; }
+#c3 .mc-1 .mc-num { color:rgba(220,38,38,0.3); }
+#c3 .mc-2 .mc-num { color:rgba(220,38,38,0.2); }
+#c3 .mc-3 .mc-num { color:rgba(124,58,237,0.3); }
+#c3 .mc-4 .mc-num { color:rgba(255,255,255,0.1); }
+#c3 .mc-body .mc-name { font-size:22px; font-weight:800; color:#fff; text-transform:uppercase; }
+#c3 .mc-body .mc-alias { font-size:13px; color:rgba(255,255,255,0.3); margin-top:2px; font-weight:400; }
+#c3 .mc-body .mc-fn { font-size:15px; color:rgba(255,255,255,0.55); margin-top:8px; line-height:1.4; }
+#c3 .mc-body .mc-fn strong { color:rgba(255,255,255,0.8); }
+
+/* ─── SLIDE 4 — TRANSVERSO ─── */
+#c4 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:80px; }
+#c4 .headline { font-size:80px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-3px; color:#fff; margin-bottom:48px; }
+#c4 .headline span { color:#DC2626; }
+/* Cylinder visualization */
+#c4 .cylinder {
+  display:flex; flex-direction:column; align-items:center; margin-bottom:40px;
+}
+#c4 .cyl-top { width:560px; height:24px; background:rgba(220,38,38,0.2); border:2px solid rgba(220,38,38,0.4); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+#c4 .cyl-top-label { font-size:11px; font-weight:700; color:rgba(220,38,38,0.7); letter-spacing:3px; text-transform:uppercase; }
+#c4 .cyl-body { width:560px; height:220px; position:relative; border-left:2px solid rgba(220,38,38,0.2); border-right:2px solid rgba(220,38,38,0.2); background:rgba(220,38,38,0.03); }
+#c4 .cyl-layer { position:absolute; left:0; right:0; display:flex; align-items:center; padding:0 20px; gap:16px; }
+#c4 .cyl-layer-bar { height:32px; border-radius:6px; }
+#c4 .cyl-label { font-size:14px; font-weight:700; white-space:nowrap; }
+#c4 .cyl-bottom { width:560px; height:24px; background:rgba(124,58,237,0.15); border:2px solid rgba(124,58,237,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+#c4 .cyl-bottom-label { font-size:11px; font-weight:700; color:rgba(124,58,237,0.7); letter-spacing:3px; text-transform:uppercase; }
+#c4 .facts { display:flex; flex-direction:column; gap:12px; }
+#c4 .fact { display:flex; align-items:center; gap:16px; }
+#c4 .fact-bullet { width:6px; height:6px; border-radius:50%; background:#DC2626; flex-shrink:0; }
+#c4 .fact-text { font-size:18px; color:rgba(255,255,255,0.6); }
+#c4 .fact-text strong { color:#fff; }
+
+/* ─── SLIDE 5 — ERRORES ─── */
+#c5 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:80px; }
+#c5 .headline { font-size:80px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-3px; color:#fff; margin-bottom:48px; }
+#c5 .headline span { color:#DC2626; }
+#c5 .ex-cards { display:flex; flex-direction:column; gap:16px; margin-bottom:32px; }
+#c5 .ex-card {
+  display:flex; align-items:center; gap:20px;
+  padding:20px 24px; border-radius:14px;
+}
+#c5 .ex-bad { background:rgba(220,38,38,0.05); border:1px solid rgba(220,38,38,0.12); }
+#c5 .ex-good { background:rgba(34,197,94,0.05); border:1px solid rgba(34,197,94,0.12); }
+#c5 .ex-icon { font-size:28px; min-width:36px; }
+#c5 .ex-body .et { font-size:19px; font-weight:700; }
+#c5 .ex-bad .et { color:rgba(220,38,38,0.8); }
+#c5 .ex-good .et { color:rgba(34,197,94,0.9); }
+#c5 .ex-body .es { font-size:13px; color:rgba(255,255,255,0.35); margin-top:4px; }
+#c5 .insight {
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px; padding:24px;
+  font-size:18px; color:rgba(255,255,255,0.5); line-height:1.5;
+}
+#c5 .insight strong { color:#fff; }
+
+/* ─── SLIDE 6 — EJERCICIOS ─── */
+#c6 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; padding:80px; }
+#c6 .section-tag { font-size:12px; font-weight:700; letter-spacing:6px; color:#DC2626; text-transform:uppercase; margin-bottom:40px; }
+#c6 .headline { font-size:80px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-3px; color:#fff; margin-bottom:48px; }
+#c6 .headline span { color:#DC2626; }
+#c6 .ex-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+#c6 .ex-box {
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px; padding:24px;
+}
+#c6 .ex-num { font-size:13px; font-weight:700; letter-spacing:4px; color:rgba(220,38,38,0.5); margin-bottom:8px; text-transform:uppercase; }
+#c6 .ex-name { font-size:22px; font-weight:800; color:#fff; }
+#c6 .ex-target { font-size:13px; color:rgba(220,38,38,0.7); margin-top:4px; font-weight:600; }
+#c6 .ex-desc { font-size:13px; color:rgba(255,255,255,0.35); margin-top:8px; line-height:1.4; }
+#c6 .ex-sets {
+  display:inline-block; margin-top:12px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px; padding:4px 12px;
+  font-size:11px; font-weight:700; color:rgba(255,255,255,0.4); letter-spacing:2px;
+}
+#c6 .note { margin-top:28px; font-size:18px; color:rgba(255,255,255,0.4); line-height:1.5; }
+#c6 .note strong { color:#fff; }
+
+/* ─── SLIDE 7 CTA ─── */
+#c7 { background:#0a0a0a; }
+#c7 .left-bar { position:absolute; left:0; top:0; bottom:0; width:8px; background:#DC2626; }
+#c7 .glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:700px; background:radial-gradient(circle,rgba(220,38,38,0.1) 0%,transparent 60%); }
+#c7 .content { position:relative; z-index:10; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:80px; }
+#c7 .save-badge {
+  display:inline-flex; align-items:center; gap:10px;
+  background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25);
+  border-radius:100px; padding:10px 24px; margin-bottom:40px;
+}
+#c7 .save-label { font-size:13px; font-weight:700; color:#DC2626; letter-spacing:2px; }
+#c7 .headline { font-size:100px; font-weight:900; line-height:0.88; text-transform:uppercase; letter-spacing:-4px; color:#fff; margin-bottom:40px; }
+#c7 .headline span { color:#DC2626; }
+#c7 .sub { font-size:22px; color:rgba(255,255,255,0.4); line-height:1.6; margin-bottom:56px; }
+#c7 .sub strong { color:rgba(255,255,255,0.8); }
+#c7 .url { font-size:64px; font-weight:900; color:#fff; letter-spacing:-2px; }
+#c7 .url span { color:#DC2626; }
+#c7 .url-sub { font-size:16px; color:rgba(255,255,255,0.3); margin-top:10px; letter-spacing:2px; }
+</style>
+</head>
+<body>
+
+<div class="page-title">Carrusel 05 — Anatomía: El Core (más que abdominales) — 7 slides</div>
+<button class="dl-all" onclick="downloadAll()">⬇  Descargar todos los slides (7 PNGs)</button>
+
+<!-- ═══ SLIDE 1 COVER ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 1 / 7 — Portada</div>
+  <div class="canvas" id="c1">
+    <div class="noise"></div>
+    <div class="top-bar"></div>
+    <div class="glow-r"></div><div class="glow-l"></div>
+    <!-- Core visualization on the right -->
+    <div class="torso-area">
+      <div class="core-ring">
+        <div class="core-label">CORE<br>360°</div>
+        <!-- Muscle points -->
+        <div style="position:absolute;top:15%;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:#DC2626;box-shadow:0 0 16px rgba(220,38,38,0.7);"></div>
+        <div style="position:absolute;top:35%;left:10%;width:10px;height:10px;border-radius:50%;background:rgba(220,38,38,0.6);box-shadow:0 0 12px rgba(220,38,38,0.5);"></div>
+        <div style="position:absolute;top:35%;right:10%;width:10px;height:10px;border-radius:50%;background:rgba(220,38,38,0.6);box-shadow:0 0 12px rgba(220,38,38,0.5);"></div>
+        <div style="position:absolute;top:60%;left:15%;width:8px;height:8px;border-radius:50%;background:rgba(124,58,237,0.7);box-shadow:0 0 10px rgba(124,58,237,0.5);"></div>
+        <div style="position:absolute;top:60%;right:15%;width:8px;height:8px;border-radius:50%;background:rgba(124,58,237,0.7);box-shadow:0 0 10px rgba(124,58,237,0.5);"></div>
+        <div style="position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:rgba(124,58,237,0.5);box-shadow:0 0 10px rgba(124,58,237,0.4);"></div>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:6px;align-items:center;">
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:#DC2626;"></div><div style="font-size:11px;color:rgba(255,255,255,0.4);">Primarios</div></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:rgba(124,58,237,0.7);"></div><div style="font-size:11px;color:rgba(255,255,255,0.4);">Secundarios</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="eyebrow">Anatomía · Core</div>
+      <div class="headline">
+        EL CORE:<br>
+        MUCHO<br>
+        MÁS QUE<br>
+        <span class="red">ABDOMI-</span><br>
+        <span class="red">NALES.</span>
+      </div>
+      <div class="sub">
+        Lo que nadie te explica sobre<br>
+        <strong>el centro de toda tu fuerza.</strong>
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-t">RIVAL<span>FIT</span></div>
+      <div class="snum">01 / 07</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('c1','rival-core-01.png')">⬇ Descargar Slide 1</button>
+</div>
+
+<!-- ═══ SLIDE 2 ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 2 / 7 — Mito vs Realidad</div>
+  <div class="canvas" id="c2">
+    <div class="noise"></div>
+    <div class="top-bar"></div>
+    <div style="position:absolute;bottom:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(220,38,38,0.1) 0%,transparent 60%);"></div>
+    <div class="content">
+      <div class="headline">EL <span>MITO</span><br>VS LA<br>REALIDAD.</div>
+      <div class="myth-box">
+        <div class="myth-label">❌ El mito</div>
+        <div class="myth-text">"El core son los abdominales.<br>Con hacer crunches es suficiente."</div>
+      </div>
+      <div class="reality-box">
+        <div class="reality-label">✓ La realidad</div>
+        <div class="reality-text">El core es un <strong style="color:#DC2626;">sistema de 360°</strong> que incluye músculos que ni siquiera ves y que determinan tu rendimiento real.</div>
+      </div>
+      <div class="big-stat">29 músculos</div>
+      <div class="big-stat-label">forman el complejo del core. Los crunches solo trabajan 1.</div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-t">RIVAL<span>FIT</span></div>
+      <div class="snum">02 / 07</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('c2','rival-core-02.png')">⬇ Descargar Slide 2</button>
+</div>
+
+<!-- ═══ SLIDE 3 ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 3 / 7 — Los 4 grupos musculares</div>
+  <div class="canvas" id="c3">
+    <div class="noise"></div>
+    <div class="top-bar"></div>
+    <div style="position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(220,38,38,0.1) 0%,transparent 60%);"></div>
+    <div class="content">
+      <div class="section-tag">Anatomía · Los 4 grupos clave</div>
+      <div style="font-size:72px;font-weight:900;line-height:0.88;text-transform:uppercase;letter-spacing:-2px;color:#fff;margin-bottom:40px;">TU CORE<br><span style="color:#DC2626;">POR DENTRO</span></div>
+      <div class="muscle-cards">
+        <div class="mc mc-1">
+          <div class="mc-num">01</div>
+          <div class="mc-body">
+            <div class="mc-name">Transverso Abdominal</div>
+            <div class="mc-alias">El cinturón interno · Más profundo</div>
+            <div class="mc-fn">Se activa <strong>antes de cualquier movimiento</strong>. Tu escudo lumbar natural. Sin él, cada peso que levantas es un riesgo.</div>
+          </div>
+        </div>
+        <div class="mc mc-2">
+          <div class="mc-num">02</div>
+          <div class="mc-body">
+            <div class="mc-name">Multífidos & Erector Espinal</div>
+            <div class="mc-alias">La columna de acero · Posterior</div>
+            <div class="mc-fn">Estabilizan cada vértebra. <strong>Sin ellos, tu espalda baja falla</strong> en cualquier ejercicio de carga.</div>
+          </div>
+        </div>
+        <div class="mc mc-3">
+          <div class="mc-num">03</div>
+          <div class="mc-body">
+            <div class="mc-name">Oblicuos Interno y Externo</div>
+            <div class="mc-alias">Los rotadores · Laterales</div>
+            <div class="mc-fn">Controlan la <strong>rotación y la anti-rotación</strong>. Esenciales en throws, swings y cualquier movimiento deportivo.</div>
+          </div>
+        </div>
+        <div class="mc mc-4">
+          <div class="mc-num">04</div>
+          <div class="mc-body">
+            <div class="mc-name">Diafragma & Suelo Pélvico</div>
+            <div class="mc-alias">Las tapas del cilindro · Invisible</div>
+            <div class="mc-fn">El <strong>suelo pélvico es la base</strong> de toda tu fuerza. Nadie lo entrena y es el músculo más importante del core.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-t">RIVAL<span>FIT</span></div>
+      <div class="snum">03 / 07</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('c3','rival-core-03.png')">⬇ Descargar Slide 3</button>
+</div>
+
+<!-- ═══ SLIDE 4 ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 4 / 7 — El cilindro de presión</div>
+  <div class="canvas" id="c4">
+    <div class="noise"></div>
+    <div class="top-bar"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 60%);"></div>
+    <div class="content">
+      <div class="headline">EL CORE<br>ES UN<br><span>CILINDRO.</span></div>
+      <div class="cylinder">
+        <div class="cyl-top"><div class="cyl-top-label">Diafragma — Techo</div></div>
+        <div class="cyl-body">
+          <!-- Layers -->
+          <div class="cyl-layer" style="top:20px;">
+            <div class="cyl-layer-bar" style="width:100%;background:rgba(220,38,38,0.3);"></div>
+            <div class="cyl-label" style="color:rgba(220,38,38,0.8);position:absolute;right:20px;font-size:12px;font-weight:700;">Recto Abdominal</div>
+          </div>
+          <div class="cyl-layer" style="top:72px;">
+            <div class="cyl-layer-bar" style="width:90%;background:rgba(220,38,38,0.5);"></div>
+            <div class="cyl-label" style="color:rgba(220,38,38,0.9);position:absolute;right:20px;font-size:12px;font-weight:700;">Oblicuos</div>
+          </div>
+          <div class="cyl-layer" style="top:124px;">
+            <div class="cyl-layer-bar" style="width:80%;background:rgba(220,38,38,0.7);"></div>
+            <div class="cyl-label" style="color:#DC2626;position:absolute;right:20px;font-size:12px;font-weight:800;">Transverso — CLAVE</div>
+          </div>
+          <div class="cyl-layer" style="top:176px;">
+            <div class="cyl-layer-bar" style="width:85%;background:rgba(124,58,237,0.5);"></div>
+            <div class="cyl-label" style="color:rgba(124,58,237,0.8);position:absolute;right:20px;font-size:12px;font-weight:700;">Multífidos / Erector</div>
+          </div>
+        </div>
+        <div class="cyl-bottom"><div class="cyl-bottom-label">Suelo Pélvico — Base</div></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><div class="fact-bullet"></div><div class="fact-text">El core debe trabajar en <strong>todas las direcciones</strong>, no solo de frente</div></div>
+        <div class="fact"><div class="fact-bullet"></div><div class="fact-text">La presión intra-abdominal protege tu columna bajo carga máxima</div></div>
+        <div class="fact"><div class="fact-bullet"></div><div class="fact-text">El <strong>Valsalva</strong> (aguantar la respiración) aumenta esta presión temporalmente</div></div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-t">RIVAL<span>FIT</span></div>
+      <div class="snum">04 / 07</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('c4','rival-core-04.png')">⬇ Descargar Slide 4</button>
+</div>
+
+<!-- ═══ SLIDE 5 ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 5 / 7 — Errores comunes</div>
+  <div class="canvas" id="c5">
+    <div class="noise"></div>
+    <div class="top-bar"></div>
+    <div class="content">
+      <div class="headline">ENTRENAS<br>EL CORE<br><span>MAL.</span></div>
+      <div class="ex-cards">
+        <div class="ex-card ex-bad">
+          <div class="ex-icon">❌</div>
+          <div class="ex-body">
+            <div class="et">Solo crunches y sit-ups</div>
+            <div class="es">Trabajan el recto abdominal. El 5% del sistema total.</div>
+          </div>
+        </div>
+        <div class="ex-card ex-good">
+          <div class="ex-icon">✅</div>
+          <div class="ex-body">
+            <div class="et">Dead Bug + Hollow Body</div>
+            <div class="es">Activan el transverso y los estabilizadores profundos.</div>
+          </div>
+        </div>
+        <div class="ex-card ex-bad">
+          <div class="ex-icon">❌</div>
+          <div class="ex-body">
+            <div class="et">Plank sin activación consciente</div>
+            <div class="es">Si no aprietas activamente el core, es solo resistencia de hombros.</div>
+          </div>
+        </div>
+        <div class="ex-card ex-good">
+          <div class="ex-icon">✅</div>
+          <div class="ex-body">
+            <div class="et">Pallof Press</div>
+            <div class="es">Anti-rotación real. Obliga a todos los músculos a trabajar en 360°.</div>
+          </div>
+        </div>
+        <div class="ex-card ex-bad">
+          <div class="ex-icon">❌</div>
+          <div class="ex-body">
+            <div class="et">Ignorar el suelo pélvico</div>
+            <div class="es">Base de todo el sistema. Su debilidad compromete cualquier ejercicio con carga.</div>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <strong>Regla de oro:</strong> Si no sientes el abdomen profundo activado antes de subir el peso, el peso está mal elegido.
+      </div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-t">RIVAL<span>FIT</span></div>
+      <div class="snum">05 / 07</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('c5','rival-core-05.png')">⬇ Descargar Slide 5</button>
+</div>
+
+<!-- ═══ SLIDE 6 ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 6 / 7 — Los 6 ejercicios correctos</div>
+  <div class="canvas" id="c6">
+    <div class="noise"></div>
+    <div class="top-bar"></div>
+    <div style="position:absolute;bottom:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(220,38,38,0.08) 0%,transparent 60%);"></div>
+    <div class="content">
+      <div class="section-tag">Los ejercicios que realmente funcionan</div>
+      <div class="headline">EL <span>CORE</span><br>REAL.</div>
+      <div class="ex-grid">
+        <div class="ex-box">
+          <div class="ex-num">01</div>
+          <div class="ex-name">Dead Bug</div>
+          <div class="ex-target">Transverso + Coordinación</div>
+          <div class="ex-desc">Control motor profundo. Esencial como base antes de cualquier otro ejercicio de core.</div>
+          <div class="ex-sets">3×10 rep/lado</div>
+        </div>
+        <div class="ex-box">
+          <div class="ex-num">02</div>
+          <div class="ex-name">Pallof Press</div>
+          <div class="ex-target">Anti-rotación 360°</div>
+          <div class="ex-desc">El mejor ejercicio de core que no hace casi nadie. Trabaja todo el cilindro.</div>
+          <div class="ex-sets">3×12 rep/lado</div>
+        </div>
+        <div class="ex-box">
+          <div class="ex-num">03</div>
+          <div class="ex-name">Hollow Body</div>
+          <div class="ex-target">Recto + Transverso</div>
+          <div class="ex-desc">Posición fundamental en gimnasia y CrossFit. Crea tensión global del tronco.</div>
+          <div class="ex-sets">3×20-30 seg</div>
+        </div>
+        <div class="ex-box">
+          <div class="ex-num">04</div>
+          <div class="ex-name">McGill Big 3</div>
+          <div class="ex-target">Columna + Rehabilitación</div>
+          <div class="ex-desc">Bird-dog, side plank, curl-up modificado. El protocolo más estudiado del mundo.</div>
+          <div class="ex-sets">Protocolo Stuart McGill</div>
+        </div>
+        <div class="ex-box">
+          <div class="ex-num">05</div>
+          <div class="ex-name">Farmer's Carry</div>
+          <div class="ex-target">Core funcional bajo carga</div>
+          <div class="ex-desc">El más natural y funcional. Entrena el core tal como se usa en la vida real.</div>
+          <div class="ex-sets">4×30m bilateral</div>
+        </div>
+        <div class="ex-box">
+          <div class="ex-num">06</div>
+          <div class="ex-name">Ab Wheel Rollout</div>
+          <div class="ex-target">Anti-extensión extrema</div>
+          <div class="ex-desc">Solo si ya dominas los anteriores. El test definitivo de fuerza del core.</div>
+          <div class="ex-sets">3×8-10 rep</div>
+        </div>
+      </div>
+      <div class="note">Guarda este post 📌 y llévalo a tu próximo entrenamiento. <strong>Tu espalda te lo agradecerá.</strong></div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-t">RIVAL<span>FIT</span></div>
+      <div class="snum">06 / 07</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('c6','rival-core-06.png')">⬇ Descargar Slide 6</button>
+</div>
+
+<!-- ═══ SLIDE 7 CTA ═══ -->
+<div class="slide-wrapper">
+  <div class="slide-label">Slide 7 / 7 — CTA</div>
+  <div class="canvas" id="c7">
+    <div class="noise"></div>
+    <div class="top-bar"></div>
+    <div class="left-bar"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="save-badge">
+        <div class="save-label">📌 Guarda este post</div>
+      </div>
+      <div class="headline">ENTRENA<br><span>INTELI-</span><br>GENTE.</div>
+      <div class="sub">
+        ¿Quieres coaches que entiendan la ciencia?<br>
+        En RivalFit encuentras <strong>entrenadores certificados</strong><br>
+        y una comunidad que se exige cada día.
+      </div>
+      <div class="url">rival<span>fit</span>.app</div>
+      <div class="url-sub">Red social fitness · Gratis para siempre</div>
+    </div>
+    <div class="logo-row">
+      <div class="logo-t">RIVAL<span>FIT</span></div>
+      <div class="snum">07 / 07</div>
+    </div>
+  </div>
+  <button class="dl-btn" onclick="downloadSlide('c7','rival-core-07.png')">⬇ Descargar Slide 7</button>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+async function downloadSlide(id, filename) {
+  const el = document.getElementById(id);
+  const btn = el.nextElementSibling;
+  btn.textContent = 'Generando...'; btn.disabled = true;
+  const c = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+  const a = document.createElement('a'); a.download = filename; a.href = c.toDataURL('image/png',1.0); a.click();
+  btn.textContent = '✓ Descargado'; btn.disabled = false;
+}
+async function downloadAll() {
+  const btn = document.querySelector('.dl-all');
+  btn.textContent = 'Generando todos...'; btn.disabled = true;
+  const slides = [
+    {id:'c1',name:'rival-core-01.png'},{id:'c2',name:'rival-core-02.png'},
+    {id:'c3',name:'rival-core-03.png'},{id:'c4',name:'rival-core-04.png'},
+    {id:'c5',name:'rival-core-05.png'},{id:'c6',name:'rival-core-06.png'},
+    {id:'c7',name:'rival-core-07.png'},
+  ];
+  for (const s of slides) {
+    const el = document.getElementById(s.id);
+    const c = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+    const a = document.createElement('a'); a.download = s.name; a.href = c.toDataURL('image/png',1.0); a.click();
+    await new Promise(r => setTimeout(r, 900));
+  }
+  btn.textContent = '✓ Todos descargados'; btn.disabled = false;
+  setTimeout(() => { btn.textContent = '⬇  Descargar todos los slides (7 PNGs)'; }, 3000);
+}
+</script>
+</body>
+</html>

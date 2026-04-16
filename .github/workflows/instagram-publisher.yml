@@ -1,0 +1,78 @@
+name: RivalFit Instagram Publisher
+
+on:
+  schedule:
+    # Todos los horarios en UTC (España CEST = UTC+2)
+    - cron: '0 7  * * 1'   # Lunes    09:00 CEST  → motivacional
+    - cron: '0 16 * * 2'   # Martes   18:00 CEST  → biomecánica squat
+    - cron: '0 10 * * 3'   # Miércoles 12:00 CEST → promo app
+    - cron: '0 17 * * 4'   # Jueves   19:00 CEST  → anatomía core
+    - cron: '0 8  * * 5'   # Viernes  10:00 CEST  → gestión centros
+
+  # Permite ejecutar manualmente desde GitHub → Actions → Run workflow
+  workflow_dispatch:
+    inputs:
+      dia:
+        description: 'Forzar día (ej: Monday, Tuesday...) — vacío para usar hoy'
+        required: false
+        default: ''
+      test:
+        description: 'Modo test (no publica nada real)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: instagram/scheduler/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r instagram/scheduler/requirements.txt
+
+      - name: Write config.json desde secrets
+        working-directory: instagram/scheduler
+        run: |
+          cat > config.json << 'ENDOFCONFIG'
+          {
+            "instagram_user_id": "${{ secrets.IG_USER_ID }}",
+            "instagram_access_token": "${{ secrets.IG_ACCESS_TOKEN }}",
+            "imgbb_api_key": "${{ secrets.IMGBB_API_KEY }}",
+            "hora_publicacion": "09:00",
+            "notificaciones_email": "rival.app.official@gmail.com"
+          }
+          ENDOFCONFIG
+
+      - name: Publicar en Instagram
+        working-directory: instagram/scheduler
+        run: |
+          ARGS="--force-time"
+
+          # Si se ejecutó manualmente con día forzado
+          if [ -n "${{ github.event.inputs.dia }}" ]; then
+            ARGS="$ARGS --dia ${{ github.event.inputs.dia }}"
+          fi
+
+          # Si se ejecutó en modo test
+          if [ "${{ github.event.inputs.test }}" = "true" ]; then
+            ARGS="$ARGS --test"
+          fi
+
+          python publisher.py $ARGS
+
+      - name: Limpiar config.json (seguridad)
+        if: always()
+        working-directory: instagram/scheduler
+        run: rm -f config.json
