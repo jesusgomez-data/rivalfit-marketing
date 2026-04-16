@@ -11,13 +11,16 @@ on:
   workflow_dispatch:
     inputs:
       dia:
-        description: 'Force day (Monday/Tuesday/etc) - empty for today'
+        description: 'Force day (Monday/Tuesday/etc)'
         required: false
         default: ''
       test:
-        description: 'Test mode - no real publish (true/false)'
+        description: 'Test mode true/false'
         required: false
         default: 'false'
+
+env:
+  PYTHONIOENCODING: utf-8
 
 jobs:
   publish:
@@ -34,27 +37,18 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install -r instagram/scheduler/requirements.txt
+        run: pip install requests
 
       - name: Write config
-        working-directory: instagram/scheduler
+        run: |
+          printf '{"instagram_user_id":"%s","instagram_access_token":"%s","imgbb_api_key":"%s","hora_publicacion":"09:00","notificaciones_email":"rival.app.official@gmail.com"}' \
+            "$IG_USER_ID" "$IG_ACCESS_TOKEN" "$IMGBB_API_KEY" \
+            > instagram/scheduler/config.json
+          echo "config.json written"
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
-        run: |
-          python - <<'PYEOF'
-          import os, json
-          cfg = {
-            "instagram_user_id": os.environ["IG_USER_ID"],
-            "instagram_access_token": os.environ["IG_ACCESS_TOKEN"],
-            "imgbb_api_key": os.environ["IMGBB_API_KEY"],
-            "hora_publicacion": "09:00",
-            "notificaciones_email": "rival.app.official@gmail.com"
-          }
-          json.dump(cfg, open("config.json", "w"))
-          print("config.json written OK")
-          PYEOF
 
       - name: Publish
         working-directory: instagram/scheduler
@@ -70,5 +64,4 @@ jobs:
 
       - name: Cleanup config
         if: always()
-        working-directory: instagram/scheduler
-        run: rm -f config.json
+        run: rm -f instagram/scheduler/config.json
