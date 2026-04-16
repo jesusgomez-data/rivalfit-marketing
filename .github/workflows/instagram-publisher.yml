@@ -19,49 +19,36 @@ on:
         required: false
         default: 'false'
 
-env:
-  PYTHONIOENCODING: utf-8
-
 jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: pip install requests
+      - run: pip install requests
 
       - name: Write config
-        run: |
-          printf '{"instagram_user_id":"%s","instagram_access_token":"%s","imgbb_api_key":"%s","hora_publicacion":"09:00","notificaciones_email":"rival.app.official@gmail.com"}' \
-            "$IG_USER_ID" "$IG_ACCESS_TOKEN" "$IMGBB_API_KEY" \
-            > instagram/scheduler/config.json
-          echo "config.json written"
-        env:
-          IG_USER_ID: ${{ secrets.IG_USER_ID }}
-          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+        run: python -c "import os,json; json.dump({'instagram_user_id':os.environ['IG_USER_ID'],'instagram_access_token':os.environ['IG_ACCESS_TOKEN'],'imgbb_api_key':os.environ['IMGBB_API_KEY'],'hora_publicacion':'09:00','notificaciones_email':'rival.app.official@gmail.com'},open('instagram/scheduler/config.json','w'))"
 
       - name: Publish
-        working-directory: instagram/scheduler
         run: |
           ARGS="--force-time"
-          if [ -n "${{ github.event.inputs.dia }}" ]; then
-            ARGS="$ARGS --dia ${{ github.event.inputs.dia }}"
-          fi
-          if [ "${{ github.event.inputs.test }}" = "true" ]; then
-            ARGS="$ARGS --test"
-          fi
-          python publisher.py $ARGS
+          DIA="${{ github.event.inputs.dia }}"
+          TEST="${{ github.event.inputs.test }}"
+          if [ -n "$DIA" ]; then ARGS="$ARGS --dia $DIA"; fi
+          if [ "$TEST" = "true" ]; then ARGS="$ARGS --test"; fi
+          python instagram/scheduler/publisher.py $ARGS
 
-      - name: Cleanup config
+      - name: Cleanup
         if: always()
         run: rm -f instagram/scheduler/config.json
